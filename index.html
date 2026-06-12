@@ -1004,10 +1004,13 @@ function renderQR() {
 }
 
 async function fetchData() {
+  console.log("fetchData: start, apiKey=", cfg.driveApiKey ? "set" : "empty");
   if (!cfg.driveApiKey) { loadMock(); return; }
   try {
     const img = id => `https://drive.google.com/uc?export=view&id=${id}`;
+    console.log("fetchData: querying subfolders...");
     const folders = await driveList(`'${cfg.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder'`);
+    console.log("fetchData: folders found:", folders.length);
     const packs = [];
 
     if (folders.length) {
@@ -1024,7 +1027,9 @@ async function fetchData() {
         });
       }
     } else {
+      console.log("fetchData: no subfolders, listing root images...");
       const files = await driveList(`'${cfg.driveFolderId}' in parents and mimeType contains 'image/'`);
+      console.log("fetchData: root images found:", files.length);
       if (files.length) {
         const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
         packs.push({
@@ -1037,6 +1042,7 @@ async function fetchData() {
       }
     }
 
+    console.log("fetchData: packs built:", packs.length);
     if (packs.length) {
       data = { success: true, packs };
       renderPacks();
@@ -1045,6 +1051,7 @@ async function fetchData() {
       return;
     }
   } catch(e) {
+    console.error("fetchData error:", e);
     showSyncStatus("⚠ Ошибка загрузки: " + e.message);
   }
   loadMock();
