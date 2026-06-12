@@ -1012,6 +1012,7 @@ async function fetchData() {
 
     if (folders.length) {
       for (const f of folders) {
+        if (f.name.startsWith("_")) continue;
         const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
         if (!files.length) continue;
         const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
