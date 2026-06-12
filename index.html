@@ -15,7 +15,7 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #080e08;
+      background: #060d06;
       color: #f4f4f5;
       overflow-x: hidden;
       line-height: 1.5;
@@ -23,7 +23,57 @@
       min-height: 100vh;
     }
 
-    body::before { display: none; }
+    .lava-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: #060d06;
+      filter: blur(80px) saturate(1.3);
+    }
+
+    .lava-blob {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+    }
+
+    .lava-1 {
+      width: 60vw; height: 60vh;
+      top: -10%; left: -10%;
+      background: radial-gradient(circle, rgba(80,160,80,0.6) 0%, rgba(40,100,40,0.3) 40%, transparent 70%);
+      animation: m1 12s ease-in-out infinite alternate;
+    }
+    .lava-2 {
+      width: 50vw; height: 50vh;
+      top: 30%; right: -5%;
+      background: radial-gradient(circle, rgba(100,180,100,0.5) 0%, rgba(50,120,50,0.25) 40%, transparent 70%);
+      animation: m2 15s ease-in-out infinite alternate;
+    }
+    .lava-3 {
+      width: 55vw; height: 55vh;
+      bottom: -5%; left: 20%;
+      background: radial-gradient(circle, rgba(60,140,60,0.55) 0%, rgba(30,90,30,0.3) 40%, transparent 70%);
+      animation: m3 18s ease-in-out infinite alternate;
+    }
+    .lava-4 {
+      width: 40vw; height: 40vh;
+      top: 10%; left: 40%;
+      background: radial-gradient(circle, rgba(120,200,120,0.35) 0%, rgba(60,130,60,0.2) 40%, transparent 70%);
+      animation: m4 10s ease-in-out infinite alternate;
+    }
+    .lava-5 {
+      width: 45vw; height: 45vh;
+      bottom: 20%; right: 15%;
+      background: radial-gradient(circle, rgba(70,150,70,0.4) 0%, rgba(35,95,35,0.2) 40%, transparent 70%);
+      animation: m5 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes m1 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(15vw,10vh) scale(1.2)} 100%{transform:translate(-5vw,15vh) scale(0.9)} }
+    @keyframes m2 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20vw,-8vh) scale(1.15)} 100%{transform:translate(-10vw,12vh) scale(0.85)} }
+    @keyframes m3 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(10vw,-15vh) scale(1.1)} 100%{transform:translate(-15vw,-5vh) scale(1.2)} }
+    @keyframes m4 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-12vw,8vh) scale(0.9)} 100%{transform:translate(8vw,-10vh) scale(1.15)} }
+    @keyframes m5 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(10vw,12vh) scale(1.1)} 100%{transform:translate(-8vw,-8vh) scale(0.95)} }
 
     .page-frame {
       max-width: 1400px;
@@ -876,46 +926,13 @@
 </head>
 <body>
 
-<canvas id="lava-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none"></canvas>
-
-<script id="lava-vs" type="x-shader/x-vertex">
-attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}
-</script>
-<script id="lava-fs" type="x-shader/x-fragment">
-precision mediump float;
-uniform float t;
-uniform vec2 r;
-
-float n(vec2 p){
-  return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);
-}
-
-float s(vec2 p){
-  vec2 i=floor(p),f=fract(p);
-  f=f*f*(3.0-2.0*f);
-  return mix(mix(n(i),n(i+vec2(1,0)),f.x),mix(n(i+vec2(0,1)),n(i+vec2(1,1)),f.x),f.y);
-}
-
-float fb(vec2 p){
-  return s(p)*0.5+s(p*2.0)*0.25+s(p*4.0)*0.125;
-}
-
-void main(){
-  vec2 uv=gl_FragCoord.xy/r;
-  float tt=t*0.15;
-
-  vec2 q=vec2(fb(uv*3.0+vec2(0,tt)),fb(uv*3.0+vec2(5.2,tt*0.7)));
-  vec2 r2=vec2(fb(uv*3.0+4.0*q+vec2(tt*0.5,1.7)),fb(uv*3.0+4.0*q+vec2(8.3,tt*0.6)));
-  float f=fb(uv*3.0+4.0*r2);
-
-  float v=f*0.8+0.1;
-  vec3 col=mix(vec3(0.02,0.06,0.02),vec3(0.15,0.35,0.15),smoothstep(0.2,0.6,v));
-  col=mix(col,vec3(0.5,0.7,0.5),smoothstep(0.55,0.85,v));
-  col=mix(col,vec3(0.8,0.9,0.8),smoothstep(0.8,0.95,v));
-
-  gl_FragColor=vec4(col,1);
-}
-</script>
+<div class="lava-bg">
+  <div class="lava-blob lava-1"></div>
+  <div class="lava-blob lava-2"></div>
+  <div class="lava-blob lava-3"></div>
+  <div class="lava-blob lava-4"></div>
+  <div class="lava-blob lava-5"></div>
+</div>
 
 <div class="page-frame">
   <div class="grid-lines"></div>
@@ -1346,50 +1363,5 @@ function nextLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx + 1) % lbPhotos
 function prevLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx - 1 + lbPhotos.length) % lbPhotos.length; updateLb(); }
 </script>
 
-<script>
-(function(){
-  const c = document.getElementById('lava-canvas');
-  const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-  if(!gl) return;
-
-  function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; gl.viewport(0,0,c.width,c.height); }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function sh(type,src){
-    const s=gl.createShader(type);
-    gl.shaderSource(s,src);
-    gl.compileShader(s);
-    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error(gl.getShaderInfoLog(s));return null;}
-    return s;
-  }
-
-  const vs=sh(gl.VERTEX_SHADER,document.getElementById('lava-vs').textContent);
-  const fs=sh(gl.FRAGMENT_SHADER,document.getElementById('lava-fs').textContent);
-  const pg=gl.createProgram();
-  gl.attachShader(pg,vs);gl.attachShader(pg,fs);gl.linkProgram(pg);
-  gl.useProgram(pg);
-
-  const buf=gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  const pLoc=gl.getAttribLocation(pg,'p');
-  gl.enableVertexAttribArray(pLoc);
-  gl.vertexAttribPointer(pLoc,2,gl.FLOAT,false,0,0);
-
-  const uT=gl.getUniformLocation(pg,'t');
-  const uR=gl.getUniformLocation(pg,'r');
-
-  let t=0;
-  function draw(){
-    t+=0.016;
-    gl.uniform1f(uT,t);
-    gl.uniform2f(uR,c.width,c.height);
-    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-</script>
 </body>
 </html>
