@@ -952,6 +952,37 @@
   <div class="lightbox-hint">← → навигация · Esc закрыть</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+<script>
+(function(){
+  const u = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
+  const models = [u+"tiny_face_detector_model-weights_manifest.json",u+"face_landmark_68_model-weights_manifest.json"];
+  let ready = false;
+
+  async function init() {
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri(u);
+      await faceapi.nets.faceLandmark68TinyNet.loadFromUri(u);
+      ready = true;
+      console.log("face-api models loaded OK");
+    } catch(e) { console.warn("face-api load failed:", e); }
+  }
+  init();
+
+  window._detectFaces = async function(img) {
+    if (!ready) return null;
+    try {
+      const det = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:0.4})).withFaceLandmarks(true);
+      if (!det.length) return null;
+      const w = img.naturalWidth, h = img.naturalHeight;
+      let cx=0, cy=0;
+      det.forEach(d => { cx += d.detection.box.x/w + d.detection.box.width/w/2; cy += d.detection.box.y/h + d.detection.box.height/h/2; });
+      cx /= det.length; cy /= det.length;
+      return {x: Math.max(0,Math.min(100,cx*100)), y: Math.max(0,Math.min(100,cy*100))};
+    } catch(e) { return null; }
+  };
+})();
+</script>
 <script>
 const CONFIG = {
   ownerName: "Андронов Роман",
@@ -1096,6 +1127,13 @@ function renderPacks() {
         <div class="pack-cell-arrow">Смотреть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>`;
     g.appendChild(c);
+    const img = c.querySelector("img");
+    if (img) {
+      img.onload = async () => {
+        const f = await _detectFaces(img);
+        if (f) img.style.objectPosition = f.x+"% "+f.y+"%";
+      };
+    }
   });
 }
 
