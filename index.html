@@ -949,6 +949,7 @@
   <div class="lightbox-hint">← → навигация · Esc закрыть</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script>
 const CONFIG = {
   ownerName: "Андронов Роман",
@@ -972,12 +973,50 @@ let cfg = { ...CONFIG };
 let data = null;
 let lbPhotos = [], lbIdx = 0;
 let slideIdx = 0, slideTimer = null, progressTimer = null, progress = 0;
+let faceModelsLoaded = false;
+
+async function loadFaceModels() {
+  if (faceModelsLoaded) return;
+  try {
+    const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model";
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
+    ]);
+    faceModelsLoaded = true;
+  } catch(e) { /* models unavailable, skip detection */ }
+}
+
+async function detectFace(img) {
+  try {
+    if (!faceModelsLoaded) await loadFaceModels();
+    if (!faceModelsLoaded) return;
+    const detections = await faceapi
+      .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.4 }))
+      .withFaceLandmarks();
+    if (!detections.length) return;
+    const imgW = img.naturalWidth;
+    const imgH = img.naturalHeight;
+    let cx = 0, cy = 0;
+    detections.forEach(d => {
+      const box = d.detection.box;
+      cx += (box.x + box.width / 2) / imgW;
+      cy += (box.y + box.height / 2) / imgH;
+    });
+    cx /= detections.length;
+    cy /= detections.length;
+    const posX = Math.max(0, Math.min(100, cx * 100));
+    const posY = Math.max(0, Math.min(100, cy * 100));
+    img.style.objectPosition = `${posX}% ${posY}%`;
+  } catch(e) { /* detection failed, keep default position */ }
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   renderUI();
   fetchData();
   renderPricing();
   renderQR();
+  loadFaceModels();
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closeLightbox(); closePackModal(); }
     if (e.key === "ArrowRight") { if (document.getElementById("lightbox").classList.contains("active")) nextLb(); else nextSlide(); }
@@ -1086,13 +1125,15 @@ function renderPacks() {
     c.className = "pack-cell";
     c.onclick = () => openPack(i);
     c.innerHTML = `
-      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy"></div>
+      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy" style="object-position:center 20%"></div>
       <div class="pack-cell-content">
         <div class="pack-cell-num">${p.number || `0${i+1}/0${data.packs.length}`}</div>
         <div class="pack-cell-name">${p.name}</div>
         <div class="pack-cell-arrow">Смотреть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>`;
     g.appendChild(c);
+    const img = c.querySelector("img");
+    img.onload = () => detectFace(img);
   });
 }
 
