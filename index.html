@@ -26,13 +26,17 @@
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
       background: 
-        radial-gradient(ellipse 100% 50% at 50% 50%, rgba(40,120,40,0.45) 0%, transparent 70%),
-        radial-gradient(ellipse 80% 30% at 50% 50%, rgba(60,150,60,0.3) 0%, transparent 60%),
-        linear-gradient(180deg, #060d06 0%, #0a1a0a 30%, #0d220d 50%, #0a1a0a 70%, #060d06 100%);
+        radial-gradient(ellipse 50% 40% at 30% 40%, rgba(40,140,40,0.5) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 70% 55%, rgba(60,160,60,0.4) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 30% at 50% 50%, rgba(30,100,30,0.35) 0%, transparent 60%);
       z-index: -1;
       pointer-events: none;
+      will-change: transform;
+      transform: translateY(var(--grad-y, 0px));
     }
 
     .page-frame {
@@ -65,7 +69,7 @@
       top: 0; bottom: 0;
       left: 60px;
       width: 1px;
-      background: rgba(204,34,0,0.06);
+      background: rgba(40,120,40,0.06);
     }
 
     .grid-lines::after {
@@ -74,14 +78,14 @@
       top: 0; bottom: 0;
       right: 60px;
       width: 1px;
-      background: rgba(204,34,0,0.06);
+      background: rgba(40,120,40,0.06);
     }
 
     .grid-line-h {
       position: absolute;
       left: 0; right: 0;
       height: 1px;
-      background: rgba(204,34,0,0.06);
+      background: rgba(40,120,40,0.06);
       z-index: 5;
       pointer-events: none;
     }
@@ -150,8 +154,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, rgba(20,8,2,0.2) 0%, rgba(204,34,0,0.05) 25%, rgba(20,8,2,0.5) 65%, rgba(15,8,2,1) 100%),
-        linear-gradient(to right, rgba(20,8,2,0.6) 0%, rgba(204,34,0,0.1) 40%);
+        linear-gradient(to bottom, rgba(10,26,10,0.2) 0%, rgba(40,120,40,0.05) 25%, rgba(10,26,10,0.5) 65%, rgba(6,13,6,1) 100%),
+        linear-gradient(to right, rgba(10,26,10,0.6) 0%, rgba(40,120,40,0.08) 40%);
     }
 
     .hero-title {
@@ -315,7 +319,7 @@
     .pack-cell-preview {
       position: absolute;
       inset: 0;
-      opacity: 0;
+      opacity: 0.35;
       transition: opacity 0.5s;
       pointer-events: none;
     }
@@ -332,10 +336,12 @@
     .pack-cell-preview-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(20,8,2,0.8) 0%, rgba(204,34,0,0.1) 100%);
+      background: linear-gradient(to top, rgba(6,13,6,0.85) 0%, rgba(40,120,40,0.08) 100%);
     }
 
-    .pack-cell-content { position: relative; z-index: 2; }
+    .pack-cell-content { position: relative; z-index: 2; transition: text-shadow 0.4s; }
+
+    .pack-cell:hover .pack-cell-content { text-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 6px rgba(0,0,0,0.9); }
 
     /* ===== CAROUSEL ===== */
     .carousel-section {
@@ -466,14 +472,14 @@
     .carousel-progress {
       width: 80px;
       height: 2px;
-      background: rgba(204,34,0,0.15);
+      background: rgba(40,120,40,0.15);
       border-radius: 1px;
       overflow: hidden;
     }
 
     .carousel-progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, #cc2200, #ff6600);
+      background: linear-gradient(90deg, #2a7a2a, #4caf4c);
       border-radius: 1px;
       transition: width 0.1s linear;
     }
@@ -917,7 +923,7 @@
       <div class="section-label">Коллекции</div>
       <div class="section-title">Портфолио</div>
     </div>
-    <div id="sync-status" style="display:none; padding:12px 36px; font-size:11px; color:rgba(255,255,255,0.5); border-bottom:1px solid rgba(255,255,255,0.04); background:rgba(204,34,0,0.08);">
+      <div id="sync-status" style="display:none; padding:12px 36px; font-size:11px; color:rgba(255,255,255,0.5); border-bottom:1px solid rgba(255,255,255,0.04); background:rgba(40,120,40,0.08);">
       <span id="sync-status-text"></span>
     </div>
     <div class="packs-grid" id="packs-grid">
@@ -1094,6 +1100,18 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchData();
   renderPricing();
   renderQR();
+
+  // Lava gradient scroll inertia
+  let scrollY = 0, currentY = 0, velocity = 0;
+  function animate() {
+    velocity += (scrollY - currentY) * 0.04;
+    velocity *= 0.92;
+    currentY += velocity;
+    document.documentElement.style.setProperty('--grad-y', (currentY * 0.15) + 'px');
+    requestAnimationFrame(animate);
+  }
+  animate();
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closeLightbox(); closePackModal(); }
     if (e.key === "ArrowRight") { if (document.getElementById("lightbox").classList.contains("active")) nextLb(); else nextSlide(); }
