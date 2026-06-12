@@ -949,7 +949,7 @@
   <div class="lightbox-hint">← → навигация · Esc закрыть</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
 <script>
 const CONFIG = {
   ownerName: "Андронов Роман",
@@ -978,13 +978,14 @@ let faceModelsLoaded = false;
 async function loadFaceModels() {
   if (faceModelsLoaded) return;
   try {
-    const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model";
+    const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model";
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
       faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
     ]);
     faceModelsLoaded = true;
-  } catch(e) { /* models unavailable, skip detection */ }
+    console.log("face-api: models loaded");
+  } catch(e) { console.warn("face-api: models failed to load", e); }
 }
 
 async function detectFace(img) {
@@ -1008,7 +1009,8 @@ async function detectFace(img) {
     const posX = Math.max(0, Math.min(100, cx * 100));
     const posY = Math.max(0, Math.min(100, cy * 100));
     img.style.objectPosition = `${posX}% ${posY}%`;
-  } catch(e) { /* detection failed, keep default position */ }
+    console.log(`face-api: face at ${posX.toFixed(0)}% ${posY.toFixed(0)}%`);
+  } catch(e) { console.warn("face-api: detection failed", e); }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
