@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Андронов Роман — Портфолио</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: #0a0a0c; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0c;
+      color: #f4f4f5;
+      overflow-x: hidden;
+      line-height: 1.5;
+      padding: 10px;
+      min-height: 100vh;
+    }
+
+    .page-frame {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #111114;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ===== GRID LINES ===== */
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .grid-lines::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 60px;
+      width: 1px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .grid-lines::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      right: 60px;
+      width: 1px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .grid-line-h {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.04);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 36px;
+      z-index: 20;
+    }
+
+    .nav-logo {
+      font-family: 'Jost', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.2em;
+      color: #fff;
+    }
+
+    .nav-menu-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-menu-btn span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: #fff;
+      transition: all 0.3s;
+    }
+
+    .nav-menu-btn span:first-child { width: 20px; }
+    .nav-menu-btn span:last-child { width: 14px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 80vh;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.45) saturate(0.7);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(17,17,20,0.2) 0%, rgba(17,17,20,0) 25%, rgba(17,17,20,0.5) 65%, rgba(17,17,20,1) 100%),
+        linear-gradient(to right, rgba(17,17,20,0.6) 0%, rgba(17,17,20,0) 40%);
+    }
+
+    .hero-title {
+      position: absolute;
+      bottom: 18%;
+      left: 5%;
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(4rem, 12vw, 11rem);
+      font-weight: 400;
+      line-height: 0.88;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .hero-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      text-transform: none;
+      font-size: 0.65em;
+      display: block;
+      margin-left: 0.05em;
+    }
+
+    .hero-side-text {
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: rotate(-90deg) translateX(-50%);
+      transform-origin: left center;
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      white-space: nowrap;
+    }
+
+    .hero-bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 36px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      z-index: 10;
+    }
+
+    .hero-bottom-bar span {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+      padding: 48px 36px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+
+    /* ===== PACKS GRID ===== */
+    .packs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 1024px) { .packs-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .packs-grid { grid-template-columns: 1fr; } }
+
+    .pack-cell {
+      padding: 32px 28px;
+      cursor: pointer;
+      transition: background 0.4s;
+      position: relative;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .pack-cell:nth-child(4n) { border-right: none; }
+
+    .pack-cell:hover { background: rgba(255,255,255,0.02); }
+
+    .pack-cell-num {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 10px;
+    }
+
+    .pack-cell-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .pack-cell-arrow {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .pack-cell:hover .pack-cell-arrow { color: #fff; }
+
+    .pack-cell-arrow svg {
+      width: 11px;
+      height: 11px;
+      transition: transform 0.3s;
+    }
+
+    .pack-cell:hover .pack-cell-arrow svg { transform: translateX(3px); }
+
+    .pack-cell-preview {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    .pack-cell:hover .pack-cell-preview { opacity: 1; }
+
+    .pack-cell-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pack-cell-preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(17,17,20,0.5);
+    }
+
+    .pack-cell-content { position: relative; z-index: 2; }
+
+    /* ===== CAROUSEL ===== */
+    .carousel-section {
+      position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
+    }
+
+    @media (max-width: 768px) { .carousel-section { grid-template-columns: 1fr; min-height: auto; } }
+
+    .carousel-visual {
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .carousel-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+
+    .carousel-slide.active { opacity: 1; }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6) saturate(0.8);
+    }
+
+    .carousel-content {
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .carousel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .carousel-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .carousel-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+
+    .carousel-title {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 0.9;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    .carousel-slide-info {
+      margin-top: 24px;
+      min-height: 100px;
+    }
+
+    .carousel-slide-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .carousel-slide-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      max-width: 360px;
+    }
+
+    .carousel-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .carousel-index {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .carousel-progress {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .carousel-progress-bar {
+      height: 100%;
+      background: #fff;
+      border-radius: 1px;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== PRICING ===== */
+    .pricing-section {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    .pricing-card {
+      padding: 36px;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pricing-card:last-child { border-right: none; }
+
+    .pricing-tag {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .pricing-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: #fff;
+    }
+
+    .pricing-price {
+      font-family: 'Jost', sans-serif;
+      font-size: 2.2rem;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    .pricing-duration {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.1em;
+    }
+
+    .pricing-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pricing-features li {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pricing-features li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 768px) { .contact-section { grid-template-columns: 1fr; } }
+
+    .contact-info {
+      padding: 48px 36px;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .contact-label {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 16px;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .contact-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 28px;
+    }
+
+    .contact-tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: transparent;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .contact-tg-btn:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .contact-qr {
+      padding: 48px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .qr-box {
+      width: 180px;
+      height: 180px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 32px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .footer-text {
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    /* ===== PACK MODAL ===== */
+    .pack-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,12,0.96);
+      z-index: 90;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .pack-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .pack-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .pack-modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+
+    .pack-modal-num {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.3);
+      margin-top: 4px;
+    }
+
+    .pack-modal-close {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .pack-modal-close:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+    .pack-modal-desc {
+      padding: 28px 36px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .pack-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 0 2px 2px 2px;
+    }
+
+    @media (max-width: 768px) { .pack-modal-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .pack-modal-photo {
+      aspect-ratio: 1;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .pack-modal-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s, filter 0.5s;
+      filter: brightness(0.8);
+    }
+
+    .pack-modal-photo:hover img { transform: scale(1.05); filter: brightness(1); }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4,4,6,0.97);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .lightbox-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .lightbox-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+    }
+
+    .lightbox-index {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .lightbox-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .lightbox-close:hover { background: rgba(255,255,255,0.08); }
+
+    .lightbox-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+    }
+
+    .lightbox-body img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .lightbox-nav:hover { background: rgba(255,255,255,0.1); }
+    .lightbox-nav.prev { left: 20px; }
+    .lightbox-nav.next { right: 20px; }
+
+    .lightbox-hint {
+      text-align: center;
+      padding: 12px;
+      font-size: 9px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-frame">
+  <div class="grid-lines"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">A. ROMAN</div>
+    <a href="https://t.me/andronov_roman_photo" target="_blank" class="nav-menu-btn" aria-label="Telegram">
+      <span></span>
+      <span></span>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80&w=2000" alt="" class="hero-img">
+    <div class="hero-overlay"></div>
+    <div class="grid-lines"></div>
+    <div class="hero-side-text">Fashion & Portrait Photography</div>
+    <h1 class="hero-title" id="hero-title">Андронов<br><em>Роман</em></h1>
+    <div class="hero-bottom-bar">
+      <span>Москва / Петербург</span>
+      <span>© 2026</span>
+    </div>
+  </section>
+
+  <!-- PACKS -->
+  <section id="packs-section">
+    <div class="section-header">
+      <div class="section-label">Коллекции</div>
+      <div class="section-title">Портфолио</div>
+    </div>
+    <div id="sync-status" style="display:none; padding:12px 36px; font-size:11px; color:rgba(255,255,255,0.5); border-bottom:1px solid rgba(255,255,255,0.04); background:rgba(204,34,0,0.08);">
+      <span id="sync-status-text"></span>
+    </div>
+    <div class="packs-grid" id="packs-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(255,255,255,0.3);font-size:13px;letter-spacing:0.5px;" id="packs-loading">Загрузка...</div>
+    </div>
+  </section>
+
+  <!-- CAROUSEL -->
+  <section class="carousel-section" id="carousel-section">
+    <div class="carousel-visual" id="carousel-visual"></div>
+    <div class="carousel-content">
+      <div class="carousel-top">
+        <div class="section-label">Вдохновение</div>
+        <div class="carousel-controls">
+          <button class="carousel-btn" onclick="prevSlide()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="carousel-btn" onclick="nextSlide()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="carousel-title" id="carousel-title">Highlights</div>
+        <div class="carousel-slide-info" id="carousel-slide-info"></div>
+      </div>
+      <div class="carousel-bottom">
+        <div class="carousel-index" id="carousel-index">01 / 04</div>
+        <div class="carousel-progress"><div class="carousel-progress-bar" id="carousel-progress"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section" id="pricing-section">
+    <div class="section-header">
+      <div class="section-label">Услуги</div>
+      <div class="section-title">Тарифы</div>
+    </div>
+    <div class="pricing-grid" id="pricing-grid"></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact-section">
+    <div class="contact-info">
+      <div class="contact-label">Связь</div>
+      <div class="contact-title">Забронировать<br><em style="font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic;">съемку</em></div>
+      <p class="contact-desc">Напишите в Telegram, чтобы обсудить концепцию вашей будущей съемки.</p>
+      <a id="contact-tg-btn" href="https://t.me/andronov_roman_photo" target="_blank" class="contact-tg-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Написать в Telegram
+      </a>
+    </div>
+    <div class="contact-qr">
+      <div class="qr-box">
+        <img id="tg-qr" src="" alt="QR">
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-text">© 2026 Андронов Роман</span>
+    <div class="footer-links">
+      <a href="#packs-section">Работы</a>
+      <a href="https://t.me/andronov_roman_photo" target="_blank" id="footer-tg">Telegram</a>
+    </div>
+  </footer>
+</div>
+
+<!-- PACK MODAL -->
+<div class="pack-modal-overlay" id="pack-modal">
+  <div class="pack-modal-header">
+    <div>
+      <div class="pack-modal-title" id="modal-title"></div>
+      <div class="pack-modal-num" id="modal-num"></div>
+    </div>
+    <button class="pack-modal-close" onclick="closePackModal()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Закрыть
+    </button>
+  </div>
+  <div class="pack-modal-desc" id="modal-desc"></div>
+  <div class="pack-modal-grid" id="modal-grid"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-top">
+    <span class="lightbox-index" id="lb-index"></span>
+    <button class="lightbox-close" onclick="closeLightbox()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="lightbox-body">
+    <button class="lightbox-nav prev" onclick="prevLb()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <img id="lb-img" src="" alt="">
+    <button class="lightbox-nav next" onclick="nextLb()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+  <div class="lightbox-hint">← → навигация · Esc закрыть</div>
+</div>
+
+<script>
+const CONFIG = {
+  ownerName: "Андронов Роман",
+  telegramLink: "https://t.me/andronov_roman_photo",
+  driveFolderId: "1_zVX9cm_s9vXdny7Ipsc2rsigGwcXZIG",
+  driveApiKey: "AIzaSyBz98xF6vEsgjpf53yTM8zuttlMJRxwbes",
+  pricing: [
+    { tag: "Classic", name: "Portrait", price: "12 000 ₽", duration: "1.5–2 часа", desc: "Индивидуальный портрет, актерское портфолио или контент.", features: ["Консультация по стилю","До 2 образов","50+ фото в цветокоррекции","10 кадров в ретуши","Готовность 7–10 дней"] },
+    { tag: "Creative", name: "Editorial", price: "20 000 ₽", duration: "3–4 часа", desc: "Концептуальные съемки, глубокая работа со светом.", features: ["Мудборд и проработка идеи","До 4 образов","80+ фото в цветокоррекции","20 кадров в журнальной ретуши","Готовность 10–14 дней"] },
+    { tag: "Business", name: "Commercial", price: "По запросу", duration: "Full Day", desc: "Лукбуки, кампейны и рекламные каталоги для брендов.", features: ["Полное ведение проекта","Техническое задание","Без ограничений по кадрам","Лицензия на использование","Приоритетные сроки"] }
+  ],
+  mockPacks: [
+    { name: "Sienna Blake", number: "01/07", preview: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200", description: "Элегантные портреты в студийном свете.", photos: ["https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=1200"] },
+    { name: "Nyah Adebayo", number: "02/07", preview: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200", description: "Модные съемки в высоком стиле.", photos: ["https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=1200"] },
+    { name: "Sacha Vost", number: "03/07", preview: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1200", description: "Авангардные монохромные эксперименты.", photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=1200"] },
+    { name: "Yasmine Belkacem", number: "04/07", preview: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=1200", description: "Кинематографичные истории в теплых тонах.", photos: ["https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=1200","https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=1200"] }
+  ]
+};
+
+let cfg = { ...CONFIG };
+let data = null;
+let lbPhotos = [], lbIdx = 0;
+let slideIdx = 0, slideTimer = null, progressTimer = null, progress = 0;
+
+window.addEventListener("DOMContentLoaded", () => {
+  renderUI();
+  fetchData();
+  renderPricing();
+  renderQR();
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeLightbox(); closePackModal(); }
+    if (e.key === "ArrowRight") { if (document.getElementById("lightbox").classList.contains("active")) nextLb(); else nextSlide(); }
+    if (e.key === "ArrowLeft") { if (document.getElementById("lightbox").classList.contains("active")) prevLb(); else prevSlide(); }
+  });
+});
+
+function renderUI() {
+  document.title = `${cfg.ownerName} — Портфолио`;
+  const h = document.getElementById("hero-title");
+  if (h) {
+    const sp = cfg.ownerName.lastIndexOf(" ");
+    if (sp > 0) h.innerHTML = `${cfg.ownerName.substring(0, sp)}<br><em>${cfg.ownerName.substring(sp + 1)}</em>`;
+  }
+  const btn = document.getElementById("contact-tg-btn");
+  if (btn) btn.href = cfg.telegramLink;
+  const ft = document.getElementById("footer-tg");
+  if (ft) ft.href = cfg.telegramLink;
+}
+
+function renderQR() {
+  const qr = document.getElementById("tg-qr");
+  if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=111114&data=${encodeURIComponent(cfg.telegramLink)}`;
+}
+
+async function fetchData() {
+  if (!cfg.driveApiKey) { loadMock(); return; }
+  try {
+    const img = id => `https://drive.google.com/uc?export=view&id=${id}`;
+    const folders = await driveList(`'${cfg.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder'`);
+    const packs = [];
+
+    if (folders.length) {
+      for (const f of folders) {
+        const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
+        if (!files.length) continue;
+        const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
+        packs.push({
+          name: f.name,
+          number: String(packs.length + 1).padStart(2, "0") + "/" + String(folders.length).padStart(2, "0"),
+          preview: img(cover.id),
+          description: `${files.length} фото`,
+          photos: files.map(x => img(x.id))
+        });
+      }
+    } else {
+      const files = await driveList(`'${cfg.driveFolderId}' in parents and mimeType contains 'image/'`);
+      if (files.length) {
+        const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
+        packs.push({
+          name: "Портфолио",
+          number: "01/01",
+          preview: img(cover.id),
+          description: `${files.length} фото`,
+          photos: files.map(x => img(x.id))
+        });
+      }
+    }
+
+    if (packs.length) {
+      data = { success: true, packs };
+      renderPacks();
+      initCarousel();
+      showSyncStatus(`✓ Загружено с Google Диск: ${packs.length} пакетов`);
+      return;
+    }
+  } catch(e) {
+    showSyncStatus("⚠ Ошибка загрузки: " + e.message);
+  }
+  loadMock();
+}
+
+async function driveList(q) {
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${cfg.driveApiKey}&fields=files(id,name,mimeType)&pageSize=100`);
+  if (!r.ok) throw new Error(`API ${r.status}`);
+  const d = await r.json();
+  return d.files || [];
+}
+
+function showSyncStatus(msg) {
+  const st = document.getElementById("sync-status");
+  const stx = document.getElementById("sync-status-text");
+  if (st && stx) { st.style.display = "block"; stx.textContent = msg; }
+}
+
+function loadMock() {
+  showSyncStatus("⚠ Демо-режим. Добавьте driveApiKey в CONFIG");
+  data = { success: true, packs: [] };
+  renderPacks();
+  initCarousel();
+}
+
+function renderPacks() {
+  const g = document.getElementById("packs-grid");
+  if (!g || !data) return;
+  const ld = document.getElementById("packs-loading");
+  if (ld) ld.remove();
+  g.innerHTML = "";
+  if (!data.packs.length) {
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(255,255,255,0.3);font-size:13px;letter-spacing:0.5px;">Нет фото</div>';
+    return;
+  }
+  data.packs.forEach((p, i) => {
+    const c = document.createElement("div");
+    c.className = "pack-cell";
+    c.onclick = () => openPack(i);
+    c.innerHTML = `
+      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy"></div>
+      <div class="pack-cell-content">
+        <div class="pack-cell-num">${p.number || `0${i+1}/0${data.packs.length}`}</div>
+        <div class="pack-cell-name">${p.name}</div>
+        <div class="pack-cell-arrow">Смотреть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>`;
+    g.appendChild(c);
+  });
+}
+
+function renderPricing() {
+  const g = document.getElementById("pricing-grid");
+  if (!g) return;
+  g.innerHTML = "";
+  cfg.pricing.forEach(t => {
+    const c = document.createElement("div");
+    c.className = "pricing-card";
+    c.innerHTML = `
+      <div class="pricing-tag">${t.tag}</div>
+      <div class="pricing-name">${t.name}</div>
+      <div class="pricing-price">${t.price}</div>
+      <div class="pricing-duration">${t.duration}</div>
+      <div class="pricing-desc">${t.desc}</div>
+      <ul class="pricing-features">${t.features.map(f => `<li>${f}</li>`).join("")}</ul>`;
+    g.appendChild(c);
+  });
+}
+
+// Carousel
+function initCarousel() {
+  if (!data || !data.packs.length) return;
+  const vis = document.getElementById("carousel-visual");
+  vis.innerHTML = "";
+  data.packs.forEach((p, i) => {
+    const s = document.createElement("div");
+    s.className = `carousel-slide${i === 0 ? " active" : ""}`;
+    s.innerHTML = `<img src="${p.preview}" alt="${p.name}">`;
+    vis.appendChild(s);
+  });
+  slideIdx = 0;
+  updateSlide();
+  startTimer();
+}
+
+function updateSlide() {
+  if (!data) return;
+  const slides = document.querySelectorAll(".carousel-slide");
+  slides.forEach((s, i) => s.classList.toggle("active", i === slideIdx));
+  const p = data.packs[slideIdx];
+  document.getElementById("carousel-slide-info").innerHTML = `<div class="carousel-slide-name">${p.name}</div><div class="carousel-slide-desc">${p.description || ""}</div>`;
+  document.getElementById("carousel-index").textContent = `${String(slideIdx+1).padStart(2,"0")} / ${String(data.packs.length).padStart(2,"0")}`;
+  progress = 0;
+}
+
+function nextSlide() { if (!data) return; slideIdx = (slideIdx + 1) % data.packs.length; updateSlide(); }
+function prevSlide() { if (!data) return; slideIdx = (slideIdx - 1 + data.packs.length) % data.packs.length; updateSlide(); }
+
+function startTimer() {
+  clearInterval(slideTimer); clearInterval(progressTimer);
+  progress = 0;
+  slideTimer = setInterval(nextSlide, 5000);
+  progressTimer = setInterval(() => { progress += 2; document.getElementById("carousel-progress").style.width = progress + "%"; }, 100);
+}
+
+// Pack Modal
+function openPack(i) {
+  if (!data || !data.packs[i]) return;
+  const p = data.packs[i];
+  document.getElementById("modal-title").textContent = p.name;
+  document.getElementById("modal-num").textContent = p.number || `0${i+1}/0${data.packs.length}`;
+  document.getElementById("modal-desc").textContent = p.description || "";
+  const g = document.getElementById("modal-grid");
+  g.innerHTML = "";
+  p.photos.forEach((url, j) => {
+    const d = document.createElement("div");
+    d.className = "pack-modal-photo";
+    d.onclick = () => openLb(p.photos, j);
+    d.innerHTML = `<img src="${url}" alt="${p.name}" loading="lazy">`;
+    g.appendChild(d);
+  });
+  document.getElementById("pack-modal").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closePackModal() {
+  document.getElementById("pack-modal").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+// Lightbox
+function openLb(photos, idx) { lbPhotos = photos; lbIdx = idx; updateLb(); document.getElementById("lightbox").classList.add("active"); }
+function closeLightbox() { document.getElementById("lightbox").classList.remove("active"); }
+function updateLb() { if (!lbPhotos.length) return; document.getElementById("lb-img").src = lbPhotos[lbIdx]; document.getElementById("lb-index").textContent = `${String(lbIdx+1).padStart(2,"0")} / ${String(lbPhotos.length).padStart(2,"0")}`; }
+function nextLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx + 1) % lbPhotos.length; updateLb(); }
+function prevLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx - 1 + lbPhotos.length) % lbPhotos.length; updateLb(); }
+</script>
+
+</body>
+</html>
