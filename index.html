@@ -1377,9 +1377,13 @@ var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
 gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
 var a=gl.getAttribLocation(p,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
 var ut=gl.getUniformLocation(p,'t'),ur=gl.getUniformLocation(p,'r');
-var t=0,ty=0,vy=0;
-addEventListener('scroll',function(){ty=window.scrollY},{passive:true});
-function d(){vy+=(ty-vy)*.06;t+=vy*.0004;
+var t=0,vy=0,lastY=0;
+addEventListener('scroll',function(){
+  var y=window.scrollY;
+  vy=(y-lastY)*.5;
+  lastY=y;
+},{passive:true});
+function d(){vy*=.92;t+=vy*.003;
 gl.uniform1f(ut,t);gl.uniform2f(ur,c.width,c.height);
 gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(d)}d();
 })();
