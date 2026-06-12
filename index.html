@@ -23,14 +23,7 @@
       min-height: 100vh;
     }
 
-    .lava-bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
-      background: #060d06;
-      filter: blur(80px) saturate(1.3);
-    }
+    .lava-bg { display: none; }
 
     .lava-blob {
       position: absolute;
@@ -926,13 +919,7 @@
 </head>
 <body>
 
-<div class="lava-bg">
-  <div class="lava-blob lava-1"></div>
-  <div class="lava-blob lava-2"></div>
-  <div class="lava-blob lava-3"></div>
-  <div class="lava-blob lava-4"></div>
-  <div class="lava-blob lava-5"></div>
-</div>
+<canvas id="lava" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1"></canvas>
 
 <div class="page-frame">
   <div class="grid-lines"></div>
@@ -1363,5 +1350,36 @@ function nextLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx + 1) % lbPhotos
 function prevLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx - 1 + lbPhotos.length) % lbPhotos.length; updateLb(); }
 </script>
 
+<script>
+(function(){
+var c=document.getElementById('lava'),gl=c.getContext('webgl');
+if(!gl)return;
+function rs(){c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,c.width,c.height)}
+rs();addEventListener('resize',rs);
+var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 a;void main(){gl_Position=vec4(a,0,1);}');gl.compileShader(vs);
+var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump float;uniform float t;uniform vec2 r;'+
+'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
+'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);'+
+'return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}'+
+'float fb(vec2 p){return n(p)*.5+n(p*2.)*.25+n(p*4.)*.125+n(p*8.)*.0625;}'+
+'void main(){vec2 u=gl_FragCoord.xy/r,w=u;'+
+'float s=t*.08;'+
+'vec2 q=vec2(fb(u*2.5+vec2(s,s*.7)),fb(u*2.5+vec2(5.,1.3)+vec2(s*.6,s)));'+
+'vec2 q2=vec2(fb(u*2.5+4.*q+vec2(s*.4,2.)),fb(u*2.5+4.*q+vec2(8.,s*.5)));'+
+'float f=fb(u*2.5+4.*q2);'+
+'f=smoothstep(.15,.85,f);'+
+'vec3 a=vec3(.02,.04,.02),b=vec3(.06,.14,.06),c=vec3(.15,.3,.15),d=vec3(.4,.6,.4),e=vec3(.7,.85,.7);'+
+'vec3 col=f<.33?mix(a,b,f*3.):f<.66?mix(b,c,(f-.33)*3.):f<.85?mix(c,d,(f-.66)*5.88):mix(d,e,(f-.85)*6.67);'+
+'col*=.9+.1*sin(f*6.28+t*.5);'+
+'gl_FragColor=vec4(col,1);}');gl.compileShader(fs);
+var p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);
+var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+var a=gl.getAttribLocation(p,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
+var ut=gl.getUniformLocation(p,'t'),ur=gl.getUniformLocation(p,'r');
+var t=0;function d(){t+=.012;gl.uniform1f(ut,t);gl.uniform2f(ur,c.width,c.height);
+gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(d)}d();
+})();
+</script>
 </body>
 </html>
