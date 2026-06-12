@@ -956,19 +956,21 @@
 <script>
 (function(){
   const u = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
-  const models = [u+"tiny_face_detector_model-weights_manifest.json",u+"face_landmark_68_model-weights_manifest.json"];
   let ready = false;
+  let readyPromise = null;
 
-  async function init() {
+  readyPromise = (async () => {
     try {
       await faceapi.nets.tinyFaceDetector.loadFromUri(u);
       await faceapi.nets.faceLandmark68TinyNet.loadFromUri(u);
       ready = true;
-    } catch(e) { console.warn("face-api load failed:", e); }
-  }
-  init();
+    } catch(e) {}
+  })();
+
+  window._faceReady = () => readyPromise;
 
   window._detectFaces = async function(img) {
+    await readyPromise;
     if (!ready) return null;
     try {
       const det = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:0.3})).withFaceLandmarks(true);
@@ -1128,7 +1130,7 @@ function renderPacks() {
     c.className = "pack-cell";
     c.onclick = () => openPack(i);
     c.innerHTML = `
-      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy" style="object-position:center 20%"></div>
+      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy"></div>
       <div class="pack-cell-content">
         <div class="pack-cell-num">${p.number || `0${i+1}/0${data.packs.length}`}</div>
         <div class="pack-cell-name">${p.name}</div>
@@ -1137,10 +1139,12 @@ function renderPacks() {
     g.appendChild(c);
     const img = c.querySelector("img");
     if (img) {
-      img.onload = async () => {
+      const run = async () => {
+        await _faceReady();
         const f = await _detectFaces(img);
         if (f) img.style.objectPosition = f.x+"% "+f.y+"%";
       };
+      if (img.complete) run(); else img.onload = run;
     }
   });
 }
