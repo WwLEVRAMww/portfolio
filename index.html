@@ -1376,7 +1376,7 @@ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_
 var a=gl.getAttribLocation(p,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
 var ut=gl.getUniformLocation(p,'t'),ur=gl.getUniformLocation(p,'r');
 var uc1=gl.getUniformLocation(p,'c1'),uc2=gl.getUniformLocation(p,'c2'),uc3=gl.getUniformLocation(p,'c3');
-var c1=[.259,0,0],c2=[.718,.227,.004],c3=[1,.702,.584];
+var c1=[0,.1,.1],c2=[0,.4,.4],c3=[.5,1,1];
 var t=0,vy=0,lastY=0;
 addEventListener('scroll',function(){
   var y=window.scrollY;
