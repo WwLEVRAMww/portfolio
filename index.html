@@ -921,6 +921,22 @@
 
 <canvas id="lava" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1"></canvas>
 
+<div id="color-panel" style="position:fixed;bottom:20px;right:20px;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 20px;display:flex;flex-direction:column;gap:10px;font-family:monospace;font-size:11px;color:rgba(255,255,255,0.7)">
+  <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:2px">Lava Colors</div>
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+    <input type="color" id="c1" value="#1a0a00" style="width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;background:none;padding:0">
+    <span id="c1t">#1a0a00</span>
+  </label>
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+    <input type="color" id="c2" value="#802900" style="width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;background:none;padding:0">
+    <span id="c2t">#802900</span>
+  </label>
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+    <input type="color" id="c3" value="#f08c00" style="width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;background:none;padding:0">
+    <span id="c3t">#f08c00</span>
+  </label>
+</div>
+
 <div class="page-frame">
   <div class="grid-lines"></div>
 
@@ -1357,7 +1373,7 @@ if(!gl)return;
 function rs(){c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,c.width,c.height)}
 rs();addEventListener('resize',rs);
 var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 a;void main(){gl_Position=vec4(a,0,1);}');gl.compileShader(vs);
-var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump float;uniform float t;uniform vec2 r;'+
+var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump float;uniform float t;uniform vec2 r;uniform vec3 c1,c2,c3;'+
 'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
 'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);'+
 'return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}'+
@@ -1368,8 +1384,7 @@ var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump
 'vec2 q2=vec2(fb(u*2.5+4.*q+vec2(s*.4,2.)),fb(u*2.5+4.*q+vec2(8.,s*.5)));'+
 'float f=fb(u*2.5+4.*q2);'+
 'f=smoothstep(.15,.85,f);'+
-'vec3 a=vec3(.0,.0,.0),b=vec3(.2,.06,.01),c=vec3(.5,.18,.03),d=vec3(.8,.35,.05),e=vec3(.95,.55,.15);'+
-'vec3 col=f<.33?mix(a,b,f*3.):f<.66?mix(b,c,(f-.33)*3.):f<.85?mix(c,d,(f-.66)*5.88):mix(d,e,(f-.85)*6.67);'+
+'vec3 col=f<.5?mix(c1,c2,f*2.):mix(c2,c3,(f-.5)*2.);'+
 'col*=.9+.1*sin(f*6.28+t*.5);'+
 'gl_FragColor=vec4(col,1);}');gl.compileShader(fs);
 var p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);
@@ -1377,6 +1392,13 @@ var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
 gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
 var a=gl.getAttribLocation(p,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
 var ut=gl.getUniformLocation(p,'t'),ur=gl.getUniformLocation(p,'r');
+var uc1=gl.getUniformLocation(p,'c1'),uc2=gl.getUniformLocation(p,'c2'),uc3=gl.getUniformLocation(p,'c3');
+function hex2rgb(h){return[parseInt(h.slice(1,3),16)/255,parseInt(h.slice(3,5),16)/255,parseInt(h.slice(5,7),16)/255]}
+var c1=[.1,.04,0],c2=[.5,.16,0],c3=[.94,.55,0];
+function upd(){var h1=document.getElementById('c1').value,h2=document.getElementById('c2').value,h3=document.getElementById('c3').value;
+c1=hex2rgb(h1);c2=hex2rgb(h2);c3=hex2rgb(h3);
+document.getElementById('c1t').textContent=h1;document.getElementById('c2t').textContent=h2;document.getElementById('c3t').textContent=h3;}
+document.querySelectorAll('#color-panel input').forEach(function(el){el.addEventListener('input',upd)});
 var t=0,vy=0,lastY=0;
 addEventListener('scroll',function(){
   var y=window.scrollY;
@@ -1385,6 +1407,7 @@ addEventListener('scroll',function(){
 },{passive:true});
 function d(){vy*=.92;t+=vy*.003;
 gl.uniform1f(ut,t);gl.uniform2f(ur,c.width,c.height);
+gl.uniform3f(uc1,c1[0],c1[1],c1[2]);gl.uniform3f(uc2,c2[0],c2[1],c2[2]);gl.uniform3f(uc3,c3[0],c3[1],c3[2]);
 gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(d)}d();
 })();
 </script>
