@@ -845,6 +845,7 @@
     <div id="sync-status" style="display:none; padding:12px 36px; font-size:11px; color:rgba(255,255,255,0.5); border-bottom:1px solid rgba(255,255,255,0.04); background:rgba(204,34,0,0.08);">
       <span id="sync-status-text"></span>
     </div>
+    <div id="face-debug" style="padding:4px 36px; font-size:10px; color:rgba(255,255,255,0.3);"></div>
     <div class="packs-grid" id="packs-grid">
       <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(255,255,255,0.3);font-size:13px;letter-spacing:0.5px;" id="packs-loading">Загрузка...</div>
     </div>
@@ -975,15 +976,20 @@ let slideIdx = 0, slideTimer = null, progressTimer = null, progress = 0;
 let faceDetector = null;
 
 async function initFaceDetector() {
-  if (typeof FaceDetector === "undefined") return;
-  try { faceDetector = new FaceDetector({ fastMode: true, maxDetectedFaces: 3 }); } catch(e) {}
+  const el = document.getElementById("face-debug");
+  if (typeof FaceDetector === "undefined") { if (el) el.textContent = "FaceDetector API not available"; return; }
+  try {
+    faceDetector = new FaceDetector({ fastMode: true, maxDetectedFaces: 3 });
+    if (el) el.textContent = "FaceDetector ready";
+  } catch(e) { if (el) el.textContent = "FaceDetector init failed: " + e.message; }
 }
 
 async function detectFace(img) {
+  const el = document.getElementById("face-debug");
+  if (!faceDetector) { if (el) el.textContent += " | no detector"; return; }
   try {
-    if (!faceDetector) return;
     const det = await faceDetector.detect(img);
-    if (!det.length) return;
+    if (!det.length) { if (el) el.textContent += " | no faces"; return; }
     const imgW = img.naturalWidth, imgH = img.naturalHeight;
     let cx = 0, cy = 0;
     det.forEach(d => {
@@ -993,8 +999,11 @@ async function detectFace(img) {
     });
     cx /= det.length;
     cy /= det.length;
-    img.style.objectPosition = `${Math.max(0, Math.min(100, cx * 100))}% ${Math.max(0, Math.min(100, cy * 100))}%`;
-  } catch(e) {}
+    const posX = Math.max(0, Math.min(100, cx * 100));
+    const posY = Math.max(0, Math.min(100, cy * 100));
+    img.style.objectPosition = `${posX}% ${posY}%`;
+    if (el) el.textContent = `face at ${posX.toFixed(0)}% ${posY.toFixed(0)}%`;
+  } catch(e) { if (el) el.textContent = "detect error: " + e.message; }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
