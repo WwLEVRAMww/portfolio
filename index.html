@@ -1380,7 +1380,7 @@ var ut=gl.getUniformLocation(p,'t'),ur=gl.getUniformLocation(p,'r');
 var t=0,vy=0,lastY=0;
 addEventListener('scroll',function(){
   var y=window.scrollY;
-  vy=(y-lastY)*.5;
+  vy=Math.abs(y-lastY)*.5;
   lastY=y;
 },{passive:true});
 function d(){vy*=.92;t+=vy*.003;
