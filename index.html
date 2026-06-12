@@ -1368,7 +1368,7 @@ var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump
 'vec2 q2=vec2(fb(u*2.5+4.*q+vec2(s*.4,2.)),fb(u*2.5+4.*q+vec2(8.,s*.5)));'+
 'float f=fb(u*2.5+4.*q2);'+
 'f=smoothstep(.15,.85,f);'+
-'vec3 a=vec3(.0,.0,.0),b=vec3(.75,.03,.004),c=vec3(.94,.38,.008),d=vec3(.91,.31,.01),e=vec3(.85,.76,.67);'+
+'vec3 a=vec3(.0,.0,.0),b=vec3(.2,.06,.01),c=vec3(.5,.18,.03),d=vec3(.8,.35,.05),e=vec3(.95,.55,.15);'+
 'vec3 col=f<.33?mix(a,b,f*3.):f<.66?mix(b,c,(f-.33)*3.):f<.85?mix(c,d,(f-.66)*5.88):mix(d,e,(f-.85)*6.67);'+
 'col*=.9+.1*sin(f*6.28+t*.5);'+
 'gl_FragColor=vec4(col,1);}');gl.compileShader(fs);
