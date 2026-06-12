@@ -964,7 +964,6 @@
       await faceapi.nets.tinyFaceDetector.loadFromUri(u);
       await faceapi.nets.faceLandmark68TinyNet.loadFromUri(u);
       ready = true;
-      console.log("face-api models loaded OK");
     } catch(e) { console.warn("face-api load failed:", e); }
   }
   init();
