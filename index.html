@@ -974,18 +974,18 @@
       const det = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:0.3})).withFaceLandmarks(true);
       if (!det.length) return null;
       const w = img.naturalWidth, h = img.naturalHeight;
-      let topY = 1, cx = 0;
+      let topY = 1, faceH = 0, cx = 0;
       det.forEach(d => {
         const lm = d.landmarks;
         const positions = lm.positions;
-        let minY = 1;
-        positions.forEach(p => { if(p.y/h < minY) minY = p.y/h; });
-        if (minY < topY) topY = minY;
+        let minY = 1, maxY = 0;
+        positions.forEach(p => { const ny = p.y/h; if(ny < minY) minY = ny; if(ny > maxY) maxY = ny; });
+        if (minY < topY) { topY = minY; faceH = maxY - minY; }
         cx += d.detection.box.x/w + d.detection.box.width/w/2;
       });
       cx /= det.length;
-      const pad = 0.06;
-      const posY = Math.max(0, Math.min(85, (topY - pad) * 100));
+      const headroom = faceH * 0.45;
+      const posY = Math.max(0, Math.min(85, (topY - headroom) * 100));
       return {x: Math.max(0,Math.min(100,cx*100)), y: posY};
     } catch(e) { return null; }
   };
