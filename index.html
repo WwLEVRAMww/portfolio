@@ -10,12 +10,12 @@
     * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
     ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-track { background: #0a0a0c; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    ::-webkit-scrollbar-track { background: #1a0a00; }
+    ::-webkit-scrollbar-thumb { background: #cc2200; border-radius: 2px; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #0a0a0c;
+      background: #1a0a00;
       color: #f4f4f5;
       overflow-x: hidden;
       line-height: 1.5;
@@ -23,14 +23,36 @@
       min-height: 100vh;
     }
 
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(204,34,0,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 80% 30%, rgba(255,102,0,0.25) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 50% 80%, rgba(120,10,0,0.35) 0%, transparent 50%);
+      animation: gradientShift 12s ease-in-out infinite alternate;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes gradientShift {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+      50% { transform: scale(1.1) translate(-2%, 3%); opacity: 1; }
+      100% { transform: scale(1) translate(2%, -2%); opacity: 0.85; }
+    }
+
     .page-frame {
       max-width: 1400px;
       margin: 0 auto;
-      background: #111114;
+      background: rgba(15,8,2,0.85);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
       border-radius: 20px;
       overflow: hidden;
       position: relative;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(204,34,0,0.15);
+      box-shadow: 0 0 80px rgba(204,34,0,0.08), inset 0 0 60px rgba(0,0,0,0.3);
     }
 
     /* ===== GRID LINES ===== */
@@ -47,7 +69,7 @@
       top: 0; bottom: 0;
       left: 60px;
       width: 1px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(204,34,0,0.06);
     }
 
     .grid-lines::after {
@@ -56,14 +78,14 @@
       top: 0; bottom: 0;
       right: 60px;
       width: 1px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(204,34,0,0.06);
     }
 
     .grid-line-h {
       position: absolute;
       left: 0; right: 0;
       height: 1px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(204,34,0,0.06);
       z-index: 5;
       pointer-events: none;
     }
@@ -132,8 +154,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, rgba(17,17,20,0.2) 0%, rgba(17,17,20,0) 25%, rgba(17,17,20,0.5) 65%, rgba(17,17,20,1) 100%),
-        linear-gradient(to right, rgba(17,17,20,0.6) 0%, rgba(17,17,20,0) 40%);
+        linear-gradient(to bottom, rgba(20,8,2,0.2) 0%, rgba(204,34,0,0.05) 25%, rgba(20,8,2,0.5) 65%, rgba(15,8,2,1) 100%),
+        linear-gradient(to right, rgba(20,8,2,0.6) 0%, rgba(204,34,0,0.1) 40%);
     }
 
     .hero-title {
@@ -224,20 +246,27 @@
 
     .pack-cell {
       cursor: pointer;
-      transition: background 0.4s;
+      transition: all 0.4s;
       position: relative;
       aspect-ratio: 5/6;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      border-right: 1px solid rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
       overflow: hidden;
+      margin: 8px;
+      border-radius: 14px;
+      background: rgba(30,12,5,0.7);
+      border: 1px solid rgba(204,34,0,0.1);
     }
 
     .pack-cell:nth-child(4n) { border-right: none; }
 
-    .pack-cell:hover { background: rgba(255,255,255,0.02); }
+    .pack-cell:hover {
+      background: rgba(40,18,8,0.85);
+      border-color: rgba(204,34,0,0.25);
+      box-shadow: 0 4px 30px rgba(204,34,0,0.1);
+      transform: translateY(-2px);
+    }
 
     .pack-cell-num {
       font-size: 9px;
@@ -260,7 +289,7 @@
     .pack-cell-arrow {
       font-size: 10px;
       letter-spacing: 0.15em;
-      color: rgba(255,255,255,0.35);
+      color: rgba(204,34,0,0.5);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -269,7 +298,7 @@
       padding: 0 28px 32px;
     }
 
-    .pack-cell:hover .pack-cell-arrow { color: #fff; }
+    .pack-cell:hover .pack-cell-arrow { color: #ff6600; }
 
     .pack-cell-arrow svg {
       width: 11px;
@@ -299,7 +328,7 @@
     .pack-cell-preview-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(17,17,20,0.5);
+      background: linear-gradient(to top, rgba(20,8,2,0.8) 0%, rgba(204,34,0,0.1) 100%);
     }
 
     .pack-cell-content { position: relative; z-index: 2; }
@@ -307,10 +336,14 @@
     /* ===== CAROUSEL ===== */
     .carousel-section {
       position: relative;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 70vh;
+      margin: 8px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(30,12,5,0.7);
+      border: 1px solid rgba(204,34,0,0.12);
     }
 
     @media (max-width: 768px) { .carousel-section { grid-template-columns: 1fr; min-height: auto; } }
@@ -318,8 +351,8 @@
     .carousel-visual {
       position: relative;
       overflow: hidden;
-      border-right: 1px solid rgba(255,255,255,0.04);
-      background: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0) 0 0 / 20px 20px;
+      border-right: 1px solid rgba(204,34,0,0.1);
+      background: radial-gradient(circle at 1px 1px, rgba(204,34,0,0.06) 1px, transparent 0) 0 0 / 24px 24px;
     }
 
     .carousel-slide {
@@ -363,9 +396,9 @@
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: transparent;
-      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(204,34,0,0.2);
+      background: rgba(204,34,0,0.08);
+      color: rgba(255,255,255,0.6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -374,7 +407,8 @@
     }
 
     .carousel-btn:hover {
-      background: rgba(255,255,255,0.05);
+      background: rgba(204,34,0,0.2);
+      border-color: rgba(204,34,0,0.4);
       color: #fff;
     }
 
@@ -421,41 +455,46 @@
     .carousel-progress {
       width: 80px;
       height: 2px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(204,34,0,0.15);
       border-radius: 1px;
       overflow: hidden;
     }
 
     .carousel-progress-bar {
       height: 100%;
-      background: #fff;
+      background: linear-gradient(90deg, #cc2200, #ff6600);
       border-radius: 1px;
       transition: width 0.1s linear;
     }
 
     /* ===== PRICING ===== */
     .pricing-section {
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      margin: 8px;
     }
 
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid rgba(255,255,255,0.04);
+      gap: 8px;
     }
 
     @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
 
     .pricing-card {
       padding: 36px;
-      border-right: 1px solid rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      background: rgba(30,12,5,0.7);
+      border: 1px solid rgba(204,34,0,0.1);
       display: flex;
       flex-direction: column;
       gap: 20px;
+      transition: all 0.3s;
     }
 
-    .pricing-card:last-child { border-right: none; }
+    .pricing-card:hover {
+      border-color: rgba(204,34,0,0.25);
+      box-shadow: 0 4px 30px rgba(204,34,0,0.08);
+    }
 
     .pricing-tag {
       font-size: 9px;
@@ -510,7 +549,7 @@
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
+      background: rgba(204,34,0,0.5);
       flex-shrink: 0;
     }
 
@@ -518,14 +557,18 @@
     .contact-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      margin: 8px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(30,12,5,0.7);
+      border: 1px solid rgba(204,34,0,0.1);
     }
 
     @media (max-width: 768px) { .contact-section { grid-template-columns: 1fr; } }
 
     .contact-info {
       padding: 48px 36px;
-      border-right: 1px solid rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(204,34,0,0.1);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -561,9 +604,9 @@
       align-items: center;
       gap: 10px;
       padding: 12px 24px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(204,34,0,0.3);
       border-radius: 10px;
-      background: transparent;
+      background: rgba(204,34,0,0.1);
       color: #fff;
       font-size: 11px;
       font-weight: 500;
@@ -576,8 +619,9 @@
     }
 
     .contact-tg-btn:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.2);
+      background: rgba(204,34,0,0.25);
+      border-color: rgba(204,34,0,0.5);
+      box-shadow: 0 0 20px rgba(204,34,0,0.15);
     }
 
     .contact-qr {
@@ -611,7 +655,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid rgba(255,255,255,0.04);
     }
 
     .footer-text {
