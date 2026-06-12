@@ -309,12 +309,11 @@
       position: relative;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       display: grid;
-      grid-template-columns: 3fr 2fr;
-      aspect-ratio: 6/4;
-      max-height: 80vh;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
     }
 
-    @media (max-width: 768px) { .carousel-section { grid-template-columns: 1fr; aspect-ratio: auto; min-height: 60vh; } }
+    @media (max-width: 768px) { .carousel-section { grid-template-columns: 1fr; min-height: auto; } }
 
     .carousel-visual {
       position: relative;
@@ -328,17 +327,15 @@
       inset: 0;
       opacity: 0;
       transition: opacity 1s;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 40px;
     }
 
     .carousel-slide.active { opacity: 1; }
 
     .carousel-slide img {
+      position: absolute;
+      left: 0;
+      top: 0;
       height: 100%;
-      width: 100%;
       object-fit: cover;
       object-position: left center;
       filter: brightness(0.85) saturate(0.9);
