@@ -1130,7 +1130,7 @@ function renderPacks() {
     c.className = "pack-cell";
     c.onclick = () => openPack(i);
     c.innerHTML = `
-      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy"></div>
+      <div class="pack-cell-preview"><div class="pack-cell-preview-overlay"></div><img src="${p.preview}" alt="${p.name}" loading="lazy" crossorigin="anonymous"></div>
       <div class="pack-cell-content">
         <div class="pack-cell-num">${p.number || `0${i+1}/0${data.packs.length}`}</div>
         <div class="pack-cell-name">${p.name}</div>
