@@ -405,7 +405,6 @@
       gap: 28px;
     }
     @media (max-width: 900px) { .packs-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
-    @media (max-width: 560px) { .packs-grid { grid-template-columns: 1fr; } }
 
     .pack-cell {
       cursor: pointer;
@@ -518,8 +517,12 @@
       border-left: 1px solid var(--line);
     }
     @media (max-width: 860px) {
-      .carousel-content { border-left: none; border-top: 1px solid var(--line); padding: 40px 28px; }
-      .carousel-visual { aspect-ratio: 4/3; position: relative; min-height: 320px; }
+      .carousel-content { border-left: none; border-top: 1px solid var(--line); padding: 28px 20px; }
+      .carousel-visual { aspect-ratio: 1/1; position: relative; min-height: 280px; max-height: 50vw; }
+      .carousel-title { font-size: 24px; }
+      .carousel-desc { font-size: 13px; }
+      .carousel-controls { margin-top: 16px; }
+      .carousel-btn { width: 40px; height: 40px; }
     }
     .carousel-top {
       display: flex; align-items: center; justify-content: space-between;
@@ -1257,13 +1260,14 @@
       .pack-cell-title { font-size: 12px; }
       .pack-cell-meta { font-size: 10px; }
 
-      .carousel-section { padding: 56px 20px; }
-      .carousel-left { padding: 0; }
-      .carousel-title { font-size: 28px; }
-      .carousel-desc { font-size: 14px; }
-      .carousel-controls { margin-top: 24px; }
-      .carousel-btn { width: 40px; height: 40px; }
-      .carousel-counter { font-size: 12px; }
+      .carousel-section { padding: 56px 20px; display: flex; flex-direction: column; gap: 0; }
+      .carousel-visual { aspect-ratio: 1/1; min-height: 260px; max-height: 60vw; border-radius: var(--radius-card) var(--radius-card) 0 0; }
+      .carousel-content { padding: 24px 20px; border-top: 1px solid var(--line); border-left: none; }
+      .carousel-title { font-size: 22px; }
+      .carousel-desc { font-size: 13px; line-height: 1.5; }
+      .carousel-controls { margin-top: 16px; }
+      .carousel-btn { width: 38px; height: 38px; }
+      .carousel-counter { font-size: 11px; }
 
       .pricing-section { padding: 56px 20px; }
       .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
@@ -1297,7 +1301,6 @@
     }
 
     @media (max-width: 480px) {
-      .packs-grid { grid-template-columns: 1fr; gap: 20px; }
       .hero-name { font-size: clamp(2rem, 16vw, 4rem); }
     }
   </style>
