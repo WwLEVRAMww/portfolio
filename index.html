@@ -1778,31 +1778,61 @@ async function fetchData() {
     const img = id => `https://lh3.googleusercontent.com/d/${id}`;
     const folders = await driveList(`'${cfg.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder'`);
     const packs = [];
+    let pcfg = null;
+    try { const r = await fetch("packs-config.json?" + Date.now()); if (r.ok) pcfg = await r.json(); } catch(e) {}
 
     if (folders.length) {
       for (const f of folders) {
         if (f.name.startsWith("_")) continue;
         const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
         if (!files.length) continue;
-        const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
+        const pk = pcfg && pcfg.packs && pcfg.packs[f.name];
+        let photoIds = files.map(x => x.id);
+        let photoUrls = photoIds.map(x => img(x));
+        if (pk && pk.photoOrder && pk.photoOrder.length) {
+          const idToUrl = {};
+          files.forEach(x => { idToUrl[x.id] = img(x.id); });
+          const ordered = pk.photoOrder.filter(id => idToUrl[id]);
+          const rest = files.filter(x => !pk.photoOrder.includes(x.id)).map(x => x.id);
+          photoIds = [...ordered, ...rest];
+          photoUrls = photoIds.map(id => idToUrl[id] || img(id));
+        }
+        let coverUrl;
+        if (pk && pk.coverId) { coverUrl = img(pk.coverId); }
+        else { const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0]; coverUrl = img(cover.id); }
         packs.push({
           name: f.name,
           number: String(packs.length + 1).padStart(2, "0") + "/" + String(folders.length).padStart(2, "0"),
-          preview: img(cover.id),
+          preview: coverUrl,
           description: `${files.length} фото`,
-          photos: files.map(x => img(x.id))
+          photos: photoUrls,
+          _ids: photoIds
         });
       }
     } else {
       const files = await driveList(`'${cfg.driveFolderId}' in parents and mimeType contains 'image/'`);
       if (files.length) {
-        const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0];
+        const pk = pcfg && pcfg.packs && pcfg.packs["Портфолио"];
+        let photoIds = files.map(x => x.id);
+        let photoUrls = photoIds.map(x => img(x));
+        if (pk && pk.photoOrder && pk.photoOrder.length) {
+          const idToUrl = {};
+          files.forEach(x => { idToUrl[x.id] = img(x.id); });
+          const ordered = pk.photoOrder.filter(id => idToUrl[id]);
+          const rest = files.filter(x => !pk.photoOrder.includes(x.id)).map(x => x.id);
+          photoIds = [...ordered, ...rest];
+          photoUrls = photoIds.map(id => idToUrl[id] || img(id));
+        }
+        let coverUrl;
+        if (pk && pk.coverId) { coverUrl = img(pk.coverId); }
+        else { const cover = files.find(x => x.name.toLowerCase().startsWith("cover")) || files[0]; coverUrl = img(cover.id); }
         packs.push({
           name: "Портфолио",
           number: "01/01",
-          preview: img(cover.id),
+          preview: coverUrl,
           description: `${files.length} фото`,
-          photos: files.map(x => img(x.id))
+          photos: photoUrls,
+          _ids: photoIds
         });
       }
     }
@@ -1878,44 +1908,6 @@ function renderPacks() {
       if (img.complete) run(); else img.onload = run;
     }
   });
-  startThumbRotation();
-}
-
-let _thumbInterval = null;
-function startThumbRotation() {
-  if (_thumbInterval) clearInterval(_thumbInterval);
-  _thumbInterval = setInterval(() => {
-    if (!data || !data.packs.length) return;
-    const cells = document.querySelectorAll("#packs-grid .pack-cell");
-    const count = Math.max(1, Math.floor(cells.length * 0.4));
-    const indices = [];
-    while (indices.length < count) {
-      const idx = Math.floor(Math.random() * cells.length);
-      if (!indices.includes(idx)) indices.push(idx);
-    }
-    indices.forEach(idx => {
-      const cell = cells[idx];
-      const p = data.packs[idx];
-      if (!p || !p.photos || !p.photos.length) return;
-      const img = cell.querySelector(".pack-cell-thumb img");
-      if (!img) return;
-      const next = p.photos[Math.floor(Math.random() * p.photos.length)];
-      if (img.src === next || img.src.endsWith(next)) return;
-      img.style.transition = "opacity 0.5s";
-      img.style.opacity = "0.4";
-      img.style.objectPosition = "center 18%";
-      setTimeout(() => {
-        img.src = next;
-        img.onload = async () => {
-          img.style.opacity = "1";
-          await _faceReady();
-          const f = await _detectFaces(img);
-          if (f) img.style.objectPosition = f.x+"% "+f.y+"%";
-          else img.style.objectPosition = "center 18%";
-        };
-      }, 250);
-    });
-  }, 6000);
 }
 
 function renderPricing() {
