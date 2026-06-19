@@ -419,12 +419,12 @@ async function saveToGitHub() {
 
 // --- Init ---
 (function init() {
-  if (!loadSetup()) {
+  if (loadSetup()) {
+    document.getElementById("auth-screen").style.display = "flex";
+    initGoogleAuth();
+  } else {
     document.getElementById("setup-screen").style.display = "flex";
-    return;
   }
-  document.getElementById("auth-screen").style.display = "flex";
-  initGoogleAuth();
 })();
 </script>
 </body>
