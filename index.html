@@ -513,13 +513,13 @@
       border-left: 1px solid var(--line);
     }
     @media (max-width: 860px) {
-      .carousel-section { min-height: 320px; }
-      .carousel-content { padding: 24px 20px; }
-      .carousel-visual { min-height: 280px; }
-      .carousel-title { font-size: 20px; }
-      .carousel-desc { font-size: 12px; line-height: 1.5; }
-      .carousel-controls { margin-top: 12px; }
-      .carousel-btn { width: 36px; height: 36px; }
+      .carousel-section { min-height: 360px; }
+      .carousel-content { padding: 32px 28px; }
+      .carousel-visual { min-height: 300px; }
+      .carousel-title { font-size: 22px; }
+      .carousel-desc { font-size: 13px; }
+      .carousel-controls { margin-top: 16px; }
+      .carousel-btn { width: 40px; height: 40px; }
     }
     .carousel-top {
       display: flex; align-items: center; justify-content: space-between;
@@ -1273,31 +1273,29 @@
 
       .carousel-section {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        height: 260px;
-        padding: 48px 0 48px 16px;
+        grid-template-columns: 1.05fr 0.95fr;
+        min-height: 320px;
+        padding: 48px 16px;
         gap: 0;
       }
       .carousel-visual {
-        height: 100%;
+        min-height: 280px;
         border-radius: 0;
         overflow: hidden;
       }
       .carousel-content {
-        padding: 20px 16px;
+        padding: 24px 20px;
         border-left: 1px solid var(--line);
-        border-top: none;
-        gap: 12px;
+        gap: 16px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
       }
-      .carousel-top { flex-direction: row; align-items: center; }
-      .carousel-title { font-size: 18px; }
-      .carousel-desc { font-size: 11px; line-height: 1.5; }
-      .carousel-controls { margin-top: 10px; }
-      .carousel-btn { width: 32px; height: 32px; }
-      .carousel-counter { font-size: 10px; }
+      .carousel-title { font-size: 20px; }
+      .carousel-desc { font-size: 12px; }
+      .carousel-controls { margin-top: 16px; }
+      .carousel-btn { width: 38px; height: 38px; }
+      .carousel-counter { font-size: 11px; }
 
       .pricing-section { padding: 48px 16px; }
       .pricing-grid { grid-template-columns: 1fr; gap: 0; }
