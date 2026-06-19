@@ -1905,7 +1905,12 @@ function startThumbRotation() {
       img.style.opacity = "0.4";
       setTimeout(() => {
         img.src = next;
-        img.onload = () => { img.style.opacity = "1"; };
+        img.onload = async () => {
+          img.style.opacity = "1";
+          await _faceReady();
+          const f = await _detectFaces(img);
+          if (f) img.style.objectPosition = f.x+"% "+f.y+"%";
+        };
       }, 250);
     });
   }, 6000);
