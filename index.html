@@ -1995,18 +1995,6 @@ function closeLightbox() { document.getElementById("lightbox").classList.remove(
 function updateLb() { if (!lbPhotos.length) return; document.getElementById("lb-img").src = lbPhotos[lbIdx]; document.getElementById("lb-index").textContent = `${String(lbIdx+1).padStart(2,"0")} / ${String(lbPhotos.length).padStart(2,"0")}`; }
 function nextLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx + 1) % lbPhotos.length; updateLb(); }
 function prevLb() { if (!lbPhotos.length) return; lbIdx = (lbIdx - 1 + lbPhotos.length) % lbPhotos.length; updateLb(); }
-
-// Hidden editor trigger: long press on logo (1.5s)
-(function() {
-  const logo = document.querySelector(".site-logo");
-  if (!logo) return;
-  let timer = null;
-  logo.addEventListener("mousedown", () => { timer = setTimeout(() => { window.location.href = "adm-p9k2.html"; }, 1500); });
-  logo.addEventListener("mouseup", () => clearTimeout(timer));
-  logo.addEventListener("mouseleave", () => clearTimeout(timer));
-  logo.addEventListener("touchstart", () => { timer = setTimeout(() => { window.location.href = "adm-p9k2.html"; }, 1500); }, { passive: true });
-  logo.addEventListener("touchend", () => clearTimeout(timer));
-})();
 </script>
 </body>
 </html>
