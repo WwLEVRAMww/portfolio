@@ -1883,8 +1883,7 @@ function renderPacks() {
     const c = document.createElement("div");
     c.className = "pack-cell";
     c.onclick = () => openPack(i);
-    const photos = p.photos && p.photos.length ? p.photos : [p.preview];
-    const thumb = photos[Math.floor(Math.random() * photos.length)];
+    const thumb = p.preview || (p.photos && p.photos.length ? p.photos[0] : "");
     c.innerHTML = `
       <div class="pack-cell-thumb">
         <span class="pack-cell-badge">${p.number || `0${i+1}/0${data.packs.length}`}</span>
