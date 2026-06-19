@@ -484,13 +484,14 @@
     .carousel-section {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
-      min-height: 580px;
+      height: 580px;
       overflow: hidden;
     }
     .carousel-visual {
       position: relative;
       overflow: hidden;
       background: var(--bg-alt);
+      height: 100%;
     }
     .carousel-slide {
       position: absolute; inset: 0;
@@ -513,13 +514,12 @@
       border-left: 1px solid var(--line);
     }
     @media (max-width: 860px) {
-      .carousel-section { min-height: 360px; }
-      .carousel-content { padding: 32px 28px; }
-      .carousel-visual { min-height: 300px; }
-      .carousel-title { font-size: 22px; }
-      .carousel-desc { font-size: 13px; }
-      .carousel-controls { margin-top: 16px; }
-      .carousel-btn { width: 40px; height: 40px; }
+      .carousel-section { height: 340px; }
+      .carousel-content { padding: 28px 24px; }
+      .carousel-title { font-size: 20px; }
+      .carousel-desc { font-size: 12px; }
+      .carousel-controls { margin-top: 14px; }
+      .carousel-btn { width: 38px; height: 38px; }
     }
     .carousel-top {
       display: flex; align-items: center; justify-content: space-between;
@@ -1274,12 +1274,12 @@
       .carousel-section {
         display: grid;
         grid-template-columns: 1.05fr 0.95fr;
-        min-height: 320px;
+        height: 300px;
         padding: 48px 16px;
         gap: 0;
       }
       .carousel-visual {
-        min-height: 280px;
+        height: 100%;
         border-radius: 0;
         overflow: hidden;
       }
@@ -1896,13 +1896,6 @@ function initCarousel() {
     s.className = `carousel-slide${i === 0 ? " active" : ""}`;
     s.innerHTML = `<img src="${p.preview}" alt="${p.name}" crossorigin="anonymous">`;
     vis.appendChild(s);
-    const img = s.querySelector("img");
-    const run = async () => {
-      await _faceReady();
-      const f = await _detectFaces(img);
-      if (f) img.style.objectPosition = f.x+"% "+f.y+"%";
-    };
-    if (img.complete) run(); else img.onload = run;
   });
   slideIdx = 0;
   updateSlide();
