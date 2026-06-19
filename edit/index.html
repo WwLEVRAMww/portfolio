@@ -275,14 +275,14 @@ async function loadEditorData() {
         if (f.name.startsWith("_")) continue;
         const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
         if (!files.length) continue;
-        packs.push({ name: f.name, files: files.map(x => ({ id: x.id, name: x.name })) });
+        packs.push({ name: f.name, folderId: f.id, files: files.map(x => ({ id: x.id, name: x.name })) });
       }
     } else {
       const files = await driveList(`'${DRIVE_FOLDER_ID}' in parents and mimeType contains 'image/'`);
-      if (files.length) packs.push({ name: "Портфолио", files: files.map(x => ({ id: x.id, name: x.name })) });
+      if (files.length) packs.push({ name: "Портфолио", folderId: DRIVE_FOLDER_ID, files: files.map(x => ({ id: x.id, name: x.name })) });
     }
     packs.forEach(p => {
-      if (!config.packs[p.name]) config.packs[p.name] = { coverId: p.files[0]?.id || null, photoOrder: p.files.map(f => f.id) };
+      if (!config.packs[p.folderId]) config.packs[p.folderId] = { coverId: p.files[0]?.id || null, photoOrder: p.files.map(f => f.id) };
     });
     renderSidebar();
   } catch(e) {
@@ -301,7 +301,7 @@ function renderSidebar() {
   const sb = document.getElementById("sidebar");
   sb.innerHTML = "";
   packs.forEach((p, i) => {
-    const pc = config.packs[p.name];
+    const pc = config.packs[p.folderId];
     const coverId = pc?.coverId || p.files[0]?.id;
     const d = document.createElement("div");
     d.className = "sidebar-item" + (i === selectedPack ? " active" : "");
@@ -314,7 +314,7 @@ function renderSidebar() {
 function selectPack(idx) { selectedPack = idx; renderSidebar(); renderPack(); }
 
 function getOrderedPhotos(p) {
-  const pc = config.packs[p.name];
+  const pc = config.packs[p.folderId];
   if (!pc?.photoOrder?.length) return p.files.map(f => f.id);
   const idSet = new Set(p.files.map(f => f.id));
   const ordered = pc.photoOrder.filter(id => idSet.has(id));
@@ -325,7 +325,7 @@ function getOrderedPhotos(p) {
 function renderPack() {
   const p = packs[selectedPack];
   if (!p) return;
-  const pc = config.packs[p.name];
+  const pc = config.packs[p.folderId];
   const ids = getOrderedPhotos(p);
   const idToFile = {};
   p.files.forEach(f => { idToFile[f.id] = f; });
@@ -379,7 +379,7 @@ function onDrop(e) {
   const ids = getOrderedPhotos(p);
   const [moved] = ids.splice(dragIdx, 1);
   ids.splice(toIdx, 0, moved);
-  config.packs[p.name].photoOrder = ids;
+  config.packs[p.folderId].photoOrder = ids;
   renderPack();
   showStatus("Порядок изменён");
   dragIdx = null;
@@ -391,13 +391,13 @@ function movePhoto(idx, dir) {
   const newIdx = idx + dir;
   if (newIdx < 0 || newIdx >= ids.length) return;
   [ids[idx], ids[newIdx]] = [ids[newIdx], ids[idx]];
-  config.packs[p.name].photoOrder = ids;
+  config.packs[p.folderId].photoOrder = ids;
   renderPack();
 }
 
 function setCover(id) {
   const p = packs[selectedPack];
-  config.packs[p.name].coverId = id;
+  config.packs[p.folderId].coverId = id;
   renderPack();
   renderSidebar();
   showStatus("Заглавное фото изменено");

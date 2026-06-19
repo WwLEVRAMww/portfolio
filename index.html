@@ -1786,7 +1786,7 @@ async function fetchData() {
         if (f.name.startsWith("_")) continue;
         const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
         if (!files.length) continue;
-        const pk = pcfg && pcfg.packs && pcfg.packs[f.name];
+        const pk = pcfg && pcfg.packs && pcfg.packs[f.id];
         let photoIds = files.map(x => x.id);
         let photoUrls = photoIds.map(x => img(x));
         if (pk && pk.photoOrder && pk.photoOrder.length) {
@@ -1812,7 +1812,7 @@ async function fetchData() {
     } else {
       const files = await driveList(`'${cfg.driveFolderId}' in parents and mimeType contains 'image/'`);
       if (files.length) {
-        const pk = pcfg && pcfg.packs && pcfg.packs["Портфолио"];
+        const pk = pcfg && pcfg.packs && pcfg.packs[cfg.driveFolderId];
         let photoIds = files.map(x => x.id);
         let photoUrls = photoIds.map(x => img(x));
         if (pk && pk.photoOrder && pk.photoOrder.length) {
