@@ -84,6 +84,14 @@
   <input type="file" id="importInput" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
+(function() {
+  const saved = sessionStorage.getItem("adm-ok");
+  if (saved === "1") return;
+  const pass = prompt("Пароль:");
+  if (pass !== "roma2026") { document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#666;font-family:sans-serif">Доступ запрещён</div>'; throw new Error("auth"); }
+  sessionStorage.setItem("adm-ok", "1");
+})();
+
 const CONFIG = {
   driveFolderId: "1_zVX9cm_s9vXdny7Ipsc2rsigGwcXZIG",
   driveApiKey: "AIzaSyBz98xF6vEsgjpf53yTM8zuttlMJRxwbes"
