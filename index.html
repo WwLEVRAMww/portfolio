@@ -599,17 +599,25 @@
     }
     .pricing-card:last-child { border-right: none; }
     @media (max-width: 860px) {
-      .pricing-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
-      .pricing-card { padding: 16px 12px; border-right: 1px solid var(--line); gap: 8px; }
-      .pricing-card:last-child { border-right: none; }
-      .pricing-card-category { font-size: 8px; letter-spacing: 0.1em; margin-bottom: 2px; }
-      .pricing-card-title { font-size: 14px; margin-bottom: 2px; }
-      .pricing-card-price { font-size: 20px; margin-bottom: 0; }
-      .pricing-card-duration { font-size: 9px; margin-bottom: 4px; }
-      .pricing-card-desc { font-size: 10px; margin-bottom: 4px; line-height: 1.3; display: none; }
-      .pricing-card-features { font-size: 9px; gap: 3px; }
-      .pricing-card-features li { gap: 4px; }
-      .pricing-card-features li svg { width: 12px; height: 12px; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 0; }
+      .pricing-card {
+        padding: 16px 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        gap: 6px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .pricing-card:last-child { border-bottom: none; }
+      .pricing-card-left { flex: 1; min-width: 140px; }
+      .pricing-card-category { font-size: 9px; letter-spacing: 0.1em; margin-bottom: 0; }
+      .pricing-card-title { font-size: 16px; margin-bottom: 0; }
+      .pricing-card-right { text-align: right; }
+      .pricing-card-price { font-size: 22px; margin-bottom: 0; }
+      .pricing-card-duration { font-size: 9px; margin-bottom: 0; }
+      .pricing-card-desc { display: none; }
+      .pricing-card-features { display: none; }
     }
     .pricing-card:hover { background: rgba(255,255,255,0.04); }
     [data-theme="light"] .pricing-card:hover { background: rgba(0,0,0,0.03); }
@@ -1270,13 +1278,13 @@
       .carousel-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        min-height: 280px;
-        padding: 48px 16px;
+        min-height: 240px;
+        padding: 48px 0 48px 16px;
         gap: 0;
       }
       .carousel-visual {
-        min-height: 240px;
-        border-radius: var(--radius-card) 0 0 var(--radius-card);
+        min-height: 220px;
+        border-radius: 0;
         overflow: hidden;
       }
       .carousel-content {
@@ -1296,17 +1304,25 @@
       .carousel-counter { font-size: 10px; }
 
       .pricing-section { padding: 48px 16px; }
-      .pricing-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
-      .pricing-card { padding: 12px 10px; border-right: 1px solid var(--line); gap: 6px; }
-      .pricing-card:last-child { border-right: none; }
-      .pricing-card-category { font-size: 7px; letter-spacing: 0.08em; margin-bottom: 2px; }
-      .pricing-card-title { font-size: 12px; margin-bottom: 1px; }
-      .pricing-card-price { font-size: 18px; margin-bottom: 0; }
-      .pricing-card-duration { font-size: 8px; margin-bottom: 3px; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 0; }
+      .pricing-card {
+        padding: 14px 16px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        gap: 4px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .pricing-card:last-child { border-bottom: none; }
+      .pricing-card-left { flex: 1; min-width: 120px; }
+      .pricing-card-category { font-size: 8px; letter-spacing: 0.08em; margin-bottom: 0; }
+      .pricing-card-title { font-size: 14px; margin-bottom: 0; }
+      .pricing-card-right { text-align: right; }
+      .pricing-card-price { font-size: 20px; margin-bottom: 0; }
+      .pricing-card-duration { font-size: 8px; margin-bottom: 0; }
       .pricing-card-desc { display: none; }
-      .pricing-card-features { font-size: 8px; gap: 2px; }
-      .pricing-card-features li { gap: 3px; }
-      .pricing-card-features li svg { width: 10px; height: 10px; }
+      .pricing-card-features { display: none; }
 
       .cta-section { padding: 48px 16px; text-align: center; }
       .cta-title { font-size: 24px; }
@@ -1870,12 +1886,16 @@ function renderPricing() {
     const c = document.createElement("div");
     c.className = "pricing-card";
     c.innerHTML = `
-      <div class="pricing-tag">${t.tag}</div>
-      <div class="pricing-name">${t.name}</div>
-      <div class="pricing-price">${t.price}</div>
-      <div class="pricing-duration">${t.duration}</div>
-      <div class="pricing-desc">${t.desc}</div>
-      <ul class="pricing-features">${t.features.map(f => `<li>${f}</li>`).join("")}</ul>`;
+      <div class="pricing-card-left">
+        <div class="pricing-tag">${t.tag}</div>
+        <div class="pricing-name">${t.name}</div>
+        <div class="pricing-duration">${t.duration}</div>
+        <div class="pricing-desc">${t.desc}</div>
+        <ul class="pricing-features">${t.features.map(f => `<li>${f}</li>`).join("")}</ul>
+      </div>
+      <div class="pricing-card-right">
+        <div class="pricing-price">${t.price}</div>
+      </div>`;
     g.appendChild(c);
   });
 }
