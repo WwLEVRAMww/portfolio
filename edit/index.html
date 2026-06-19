@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактор</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    @font-face { font-family: 'Gros Ventre'; src: url('../Gros-Ventre-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Gros Ventre', sans-serif; background: #0e0f11; color: #e8e8e8; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+    .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 24px; }
+    .auth-screen h1 { font-size: 22px; font-weight: 400; letter-spacing: 0.04em; }
+    .auth-screen p { font-size: 13px; color: rgba(255,255,255,0.4); max-width: 400px; text-align: center; line-height: 1.6; }
+    .auth-screen .error { color: #ef4444; font-size: 13px; }
+    #g_id_signin { border-radius: 12px; overflow: hidden; }
+
+    .setup-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; padding: 40px; }
+    .setup-screen h1 { font-size: 22px; font-weight: 400; }
+    .setup-screen .steps { max-width: 560px; text-align: left; }
+    .setup-screen .step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 22px; margin-bottom: 12px; }
+    .setup-screen .step h3 { font-size: 14px; color: #22C55E; margin-bottom: 8px; font-weight: 500; }
+    .setup-screen .step p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    .setup-screen .step code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #e8e8e8; font-family: monospace; }
+    .setup-screen .step ol { padding-left: 18px; margin-top: 6px; }
+    .setup-screen .step li { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+    .setup-screen textarea { width: 100%; max-width: 560px; height: 120px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; color: #e8e8e8; font-family: monospace; font-size: 12px; resize: vertical; }
+    .setup-screen textarea::placeholder { color: rgba(255,255,255,0.25); }
+    .setup-screen .btn { padding: 10px 24px; border-radius: 20px; border: 1px solid #22C55E; background: #22C55E; color: #000; font-family: 'Gros Ventre', sans-serif; font-size: 14px; cursor: pointer; font-weight: 600; }
+    .setup-screen .btn:hover { background: #16a34a; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(14,15,17,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 20; }
+    .topbar h1 { font-size: 16px; font-weight: 400; letter-spacing: 0.04em; }
+    .topbar-actions { display: flex; gap: 10px; align-items: center; }
+    .topbar-user { font-size: 12px; color: rgba(255,255,255,0.4); margin-right: 8px; }
+    .btn { padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #e8e8e8; font-family: 'Gros Ventre', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .btn:hover { background: rgba(255,255,255,0.1); }
+    .btn.accent { background: #22C55E; color: #000; border-color: #22C55E; font-weight: 600; }
+    .btn.accent:hover { background: #16a34a; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .layout { display: flex; height: calc(100vh - 53px); }
+    .sidebar { width: 260px; min-width: 260px; border-right: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 12px 0; }
+    .sidebar-item { padding: 12px 20px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 12px; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.04); }
+    .sidebar-item.active { background: rgba(34,197,94,0.1); border-left: 3px solid #22C55E; }
+    .sidebar-item img { width: 40px; height: 50px; object-fit: cover; border-radius: 6px; }
+    .sidebar-item-info { flex: 1; min-width: 0; }
+    .sidebar-item-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-item-count { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    .main { flex: 1; overflow-y: auto; padding: 24px; }
+    .main-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: rgba(255,255,255,0.3); font-size: 16px; }
+    .pack-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .pack-header h2 { font-size: 22px; font-weight: 400; }
+    .pack-header .count { font-size: 13px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .photo-card { position: relative; border-radius: 10px; overflow: hidden; background: #1a1b1e; cursor: grab; transition: transform 0.2s, box-shadow 0.2s; }
+    .photo-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .photo-card.dragging { opacity: 0.4; transform: scale(0.95); }
+    .photo-card.drag-over { box-shadow: 0 0 0 2px #22C55E; }
+    .photo-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .photo-card-actions { position: absolute; top: 0; right: 0; display: flex; flex-direction: column; gap: 4px; padding: 6px; opacity: 0; transition: opacity 0.2s; }
+    .photo-card:hover .photo-card-actions { opacity: 1; }
+    .photo-card-actions button { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .photo-card-actions button:hover { background: rgba(255,255,255,0.2); }
+    .photo-card-actions button.cover-btn.active { background: #22C55E; color: #000; }
+    .photo-card .cover-badge { position: absolute; bottom: 8px; left: 8px; background: #22C55E; color: #000; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .photo-card .idx { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: rgba(255,255,255,0.7); font-size: 11px; padding: 2px 7px; border-radius: 8px; }
+
+    .status { position: fixed; bottom: 20px; right: 20px; background: #22C55E; color: #000; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 100; pointer-events: none; }
+    .status.show { opacity: 1; transform: translateY(0); }
+    .status.error { background: #ef4444; color: #fff; }
+
+    .loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px; }
+    .spinner { width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.1); border-top-color: #22C55E; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 760px) {
+      .sidebar { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); max-height: 35vh; }
+      .layout { flex-direction: column; }
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-screen" class="auth-screen" style="display:none">
+  <h1>Редактор серий</h1>
+  <p>Войдите через Google для доступа к редактору</p>
+  <div id="g_id_signin"></div>
+  <div class="error" id="auth-error"></div>
+</div>
+
+<div id="setup-screen" class="setup-screen" style="display:none">
+  <h1>Настройка редактора</h1>
+  <div class="steps">
+    <div class="step">
+      <h3>1. Google OAuth</h3>
+      <ol>
+        <li>Открой <code>console.cloud.google.com</code></li>
+        <li>Создай проект (или используй существующий)</li>
+        <li>APIs & Services → Credentials → Create Credentials → OAuth client ID</li>
+        <li>Application type: <code>Web application</code></li>
+        <li>Authorized JavaScript origins: <code>https://wwlevramww.github.io</code></li>
+        <li>Скопируй Client ID</li>
+      </ol>
+    </div>
+    <div class="step">
+      <h3>2. GitHub Token</h3>
+      <ol>
+        <li>Открой <code>github.com/settings/tokens</code></li>
+        <li>Generate new token (classic)</li>
+        <li>Scope: <code>repo</code> (только это)</li>
+        <li>Скопируй токен</li>
+      </ol>
+    </div>
+    <div class="step">
+      <h3>3. Вставь ниже</h3>
+      <p>Формат: <code>CLIENT_ID|GITHUB_TOKEN</code></p>
+    </div>
+  </div>
+  <textarea id="setup-input" placeholder="123456789-abc.apps.googleusercontent.com|ghp_xxxxxxxxxxxx"></textarea>
+  <button class="btn" onclick="saveSetup()">Сохранить</button>
+</div>
+
+<div id="app" style="display:none">
+  <div class="topbar">
+    <h1>Редактор серий</h1>
+    <div class="topbar-actions">
+      <span class="topbar-user" id="user-email"></span>
+      <button class="btn" id="btn-reload" onclick="reloadData()">⟳ Загрузить</button>
+      <button class="btn accent" id="btn-save" onclick="saveToGitHub()">Сохранить на сайте</button>
+      <button class="btn" onclick="logout()">Выйти</button>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="sidebar" id="sidebar">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="main" id="main">
+      <div class="main-empty">Выберите серию слева</div>
+    </div>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const REPO_OWNER = "WwLEVRAMww";
+const REPO_NAME = "portfolio";
+const CONFIG_PATH = "packs-config.json";
+const DRIVE_FOLDER_ID = "1_zVX9cm_s9vXdny7Ipsc2rsigGwcXZIG";
+const DRIVE_API_KEY = "AIzaSyBz98xF6vEsgjpf53yTM8zuttlMJRxwbes";
+const ALLOWED_EMAILS = ["levram13@gmail.com"];
+
+let googleClientId = "";
+let githubToken = "";
+let packs = [];
+let selectedPack = -1;
+let config = { packs: {} };
+let configSha = null;
+let userEmail = "";
+
+function img(id) { return `https://lh3.googleusercontent.com/d/${id}`; }
+
+function showStatus(msg, isError) {
+  const s = document.getElementById("status");
+  s.textContent = msg;
+  s.className = "status show" + (isError ? " error" : "");
+  clearTimeout(s._t);
+  s._t = setTimeout(() => s.className = "status", 3000);
+}
+
+// --- Setup ---
+function loadSetup() {
+  const raw = localStorage.getItem("editor-creds");
+  if (!raw) return false;
+  const parts = raw.split("|");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return false;
+  googleClientId = parts[0];
+  githubToken = parts[1];
+  return true;
+}
+function saveSetup() {
+  const v = document.getElementById("setup-input").value.trim();
+  if (!v || !v.includes("|")) { showStatus("Формат: CLIENT_ID|TOKEN", true); return; }
+  localStorage.setItem("editor-creds", v);
+  location.reload();
+}
+function logout() {
+  localStorage.removeItem("editor-creds");
+  location.reload();
+}
+
+// --- Google Auth ---
+function initGoogleAuth() {
+  if (typeof google === "undefined" || !google.accounts) {
+    setTimeout(initGoogleAuth, 200);
+    return;
+  }
+  google.accounts.id.initialize({
+    client_id: googleClientId,
+    callback: onGoogleLogin,
+    auto_select: false
+  });
+  google.accounts.id.renderButton(
+    document.getElementById("g_id_signin"),
+    { theme: "filled_black", size: "large", shape: "pill", text: "signin_with", width: 280 }
+  );
+}
+
+function onGoogleLogin(response) {
+  const payload = JSON.parse(atob(response.credential.split(".")[1]));
+  userEmail = payload.email;
+  if (!ALLOWED_EMAILS.includes(userEmail)) {
+    document.getElementById("auth-error").textContent = "Доступ запрещён: " + userEmail;
+    return;
+  }
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("user-email").textContent = userEmail;
+  loadEditorData();
+}
+
+// --- GitHub API ---
+async function ghFetch(path, method, body) {
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+  const opts = { method, headers: { "Authorization": `token ${githubToken}`, "Accept": "application/vnd.github.v3+json" } };
+  if (body) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(body); }
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error(`GitHub API ${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function loadConfig() {
+  try {
+    const d = await ghFetch(CONFIG_PATH, "GET");
+    config = JSON.parse(atob(d.content));
+    configSha = d.sha;
+  } catch(e) {
+    config = { packs: {} };
+    configSha = null;
+  }
+}
+
+async function saveConfig() {
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(config, null, 2))));
+  const body = { message: "Update packs config via editor", content };
+  if (configSha) body.sha = configSha;
+  const d = await ghFetch(CONFIG_PATH, "PUT", body);
+  configSha = d.sha;
+}
+
+// --- Drive API ---
+async function driveList(q) {
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${DRIVE_API_KEY}&fields=files(id,name,mimeType)&pageSize=100`);
+  if (!r.ok) throw new Error(`Drive API ${r.status}`);
+  const d = await r.json();
+  return d.files || [];
+}
+
+// --- Editor ---
+async function loadEditorData() {
+  try {
+    await loadConfig();
+    const folders = await driveList(`'${DRIVE_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.folder'`);
+    packs = [];
+    if (folders.length) {
+      for (const f of folders) {
+        if (f.name.startsWith("_")) continue;
+        const files = await driveList(`'${f.id}' in parents and mimeType contains 'image/'`);
+        if (!files.length) continue;
+        packs.push({ name: f.name, files: files.map(x => ({ id: x.id, name: x.name })) });
+      }
+    } else {
+      const files = await driveList(`'${DRIVE_FOLDER_ID}' in parents and mimeType contains 'image/'`);
+      if (files.length) packs.push({ name: "Портфолио", files: files.map(x => ({ id: x.id, name: x.name })) });
+    }
+    packs.forEach(p => {
+      if (!config.packs[p.name]) config.packs[p.name] = { coverId: p.files[0]?.id || null, photoOrder: p.files.map(f => f.id) };
+    });
+    renderSidebar();
+  } catch(e) {
+    document.getElementById("sidebar").innerHTML = `<div style="padding:20px;color:#ef4444">Ошибка: ${e.message}</div>`;
+  }
+}
+
+function reloadData() {
+  document.getElementById("sidebar").innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  document.getElementById("main").innerHTML = '<div class="main-empty">Загрузка...</div>';
+  selectedPack = -1;
+  loadEditorData();
+}
+
+function renderSidebar() {
+  const sb = document.getElementById("sidebar");
+  sb.innerHTML = "";
+  packs.forEach((p, i) => {
+    const pc = config.packs[p.name];
+    const coverId = pc?.coverId || p.files[0]?.id;
+    const d = document.createElement("div");
+    d.className = "sidebar-item" + (i === selectedPack ? " active" : "");
+    d.onclick = () => selectPack(i);
+    d.innerHTML = `<img src="${img(coverId)}" alt=""><div class="sidebar-item-info"><div class="sidebar-item-name">${p.name}</div><div class="sidebar-item-count">${p.files.length} фото</div></div>`;
+    sb.appendChild(d);
+  });
+}
+
+function selectPack(idx) { selectedPack = idx; renderSidebar(); renderPack(); }
+
+function getOrderedPhotos(p) {
+  const pc = config.packs[p.name];
+  if (!pc?.photoOrder?.length) return p.files.map(f => f.id);
+  const idSet = new Set(p.files.map(f => f.id));
+  const ordered = pc.photoOrder.filter(id => idSet.has(id));
+  const rest = p.files.filter(f => !ordered.includes(f.id)).map(f => f.id);
+  return [...ordered, ...rest];
+}
+
+function renderPack() {
+  const p = packs[selectedPack];
+  if (!p) return;
+  const pc = config.packs[p.name];
+  const ids = getOrderedPhotos(p);
+  const idToFile = {};
+  p.files.forEach(f => { idToFile[f.id] = f; });
+
+  const main = document.getElementById("main");
+  main.innerHTML = `
+    <div class="pack-header">
+      <h2>${p.name} <span class="count">${ids.length} фото</span></h2>
+    </div>
+    <div class="photo-grid" id="photo-grid"></div>`;
+
+  const grid = document.getElementById("photo-grid");
+  ids.forEach((id, i) => {
+    const f = idToFile[id];
+    if (!f) return;
+    const isCover = pc.coverId === id;
+    const card = document.createElement("div");
+    card.className = "photo-card";
+    card.draggable = true;
+    card.dataset.idx = i;
+    card.dataset.id = id;
+    card.innerHTML = `
+      <img src="${img(id)}" alt="${f.name}" loading="lazy">
+      <span class="idx">${i + 1}</span>
+      ${isCover ? '<span class="cover-badge">Заглавное</span>' : ''}
+      <div class="photo-card-actions">
+        <button class="cover-btn ${isCover ? 'active' : ''}" onclick="setCover('${id}')" title="Заглавное">★</button>
+        <button onclick="movePhoto(${i}, -1)" title="Вверх">↑</button>
+        <button onclick="movePhoto(${i}, 1)" title="Вниз">↓</button>
+      </div>`;
+    card.addEventListener("dragstart", onDragStart);
+    card.addEventListener("dragover", onDragOver);
+    card.addEventListener("dragleave", onDragLeave);
+    card.addEventListener("drop", onDrop);
+    card.addEventListener("dragend", onDragEnd);
+    grid.appendChild(card);
+  });
+}
+
+let dragIdx = null;
+function onDragStart(e) { dragIdx = +e.currentTarget.dataset.idx; e.currentTarget.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; }
+function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
+function onDragLeave(e) { e.currentTarget.classList.remove("drag-over"); }
+function onDragEnd(e) { e.currentTarget.classList.remove("dragging"); document.querySelectorAll(".drag-over").forEach(el => el.classList.remove("drag-over")); }
+function onDrop(e) {
+  e.preventDefault();
+  const toIdx = +e.currentTarget.dataset.idx;
+  e.currentTarget.classList.remove("drag-over");
+  if (dragIdx === null || dragIdx === toIdx) return;
+  const p = packs[selectedPack];
+  const ids = getOrderedPhotos(p);
+  const [moved] = ids.splice(dragIdx, 1);
+  ids.splice(toIdx, 0, moved);
+  config.packs[p.name].photoOrder = ids;
+  renderPack();
+  showStatus("Порядок изменён");
+  dragIdx = null;
+}
+
+function movePhoto(idx, dir) {
+  const p = packs[selectedPack];
+  const ids = getOrderedPhotos(p);
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= ids.length) return;
+  [ids[idx], ids[newIdx]] = [ids[newIdx], ids[idx]];
+  config.packs[p.name].photoOrder = ids;
+  renderPack();
+}
+
+function setCover(id) {
+  const p = packs[selectedPack];
+  config.packs[p.name].coverId = id;
+  renderPack();
+  renderSidebar();
+  showStatus("Заглавное фото изменено");
+}
+
+async function saveToGitHub() {
+  const btn = document.getElementById("btn-save");
+  btn.disabled = true;
+  btn.textContent = "Сохранение...";
+  try {
+    await saveConfig();
+    showStatus("Сохранено! Сайт обновится через 1–2 минуты");
+  } catch(e) {
+    showStatus("Ошибка: " + e.message, true);
+  }
+  btn.disabled = false;
+  btn.textContent = "Сохранить на сайте";
+}
+
+// --- Init ---
+(function init() {
+  if (!loadSetup()) {
+    document.getElementById("setup-screen").style.display = "flex";
+    return;
+  }
+  document.getElementById("auth-screen").style.display = "flex";
+  initGoogleAuth();
+})();
+</script>
+</body>
+</html>
