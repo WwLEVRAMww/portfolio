@@ -487,7 +487,6 @@
       min-height: 580px;
       overflow: hidden;
     }
-    @media (max-width: 860px) { .carousel-section { grid-template-columns: 1fr; min-height: auto; } }
     .carousel-visual {
       position: relative;
       overflow: hidden;
@@ -514,12 +513,13 @@
       border-left: 1px solid var(--line);
     }
     @media (max-width: 860px) {
-      .carousel-content { border-left: none; border-top: 1px solid var(--line); padding: 28px 20px; }
-      .carousel-visual { aspect-ratio: 1/1; position: relative; min-height: 280px; max-height: 50vw; }
-      .carousel-title { font-size: 24px; }
-      .carousel-desc { font-size: 13px; }
-      .carousel-controls { margin-top: 16px; }
-      .carousel-btn { width: 40px; height: 40px; }
+      .carousel-section { min-height: 320px; }
+      .carousel-content { padding: 24px 20px; }
+      .carousel-visual { min-height: 280px; }
+      .carousel-title { font-size: 20px; }
+      .carousel-desc { font-size: 12px; line-height: 1.5; }
+      .carousel-controls { margin-top: 12px; }
+      .carousel-btn { width: 36px; height: 36px; }
     }
     .carousel-top {
       display: flex; align-items: center; justify-content: space-between;
@@ -588,7 +588,6 @@
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
-    @media (max-width: 860px) { .pricing-grid { grid-template-columns: 1fr; } }
     .pricing-card {
       padding: 48px 36px;
       display: flex;
@@ -600,8 +599,17 @@
     }
     .pricing-card:last-child { border-right: none; }
     @media (max-width: 860px) {
-      .pricing-card { border-right: none; border-bottom: 1px solid var(--line); }
-      .pricing-card:last-child { border-bottom: none; }
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
+      .pricing-card { padding: 16px 12px; border-right: 1px solid var(--line); gap: 8px; }
+      .pricing-card:last-child { border-right: none; }
+      .pricing-card-category { font-size: 8px; letter-spacing: 0.1em; margin-bottom: 2px; }
+      .pricing-card-title { font-size: 14px; margin-bottom: 2px; }
+      .pricing-card-price { font-size: 20px; margin-bottom: 0; }
+      .pricing-card-duration { font-size: 9px; margin-bottom: 4px; }
+      .pricing-card-desc { font-size: 10px; margin-bottom: 4px; line-height: 1.3; display: none; }
+      .pricing-card-features { font-size: 9px; gap: 3px; }
+      .pricing-card-features li { gap: 4px; }
+      .pricing-card-features li svg { width: 12px; height: 12px; }
     }
     .pricing-card:hover { background: rgba(255,255,255,0.04); }
     [data-theme="light"] .pricing-card:hover { background: rgba(0,0,0,0.03); }
@@ -1261,40 +1269,44 @@
 
       .carousel-section {
         display: grid;
-        grid-template-columns: 1fr;
-        min-height: auto;
+        grid-template-columns: 1fr 1fr;
+        min-height: 280px;
         padding: 48px 16px;
+        gap: 0;
       }
       .carousel-visual {
-        aspect-ratio: 1/1;
-        min-height: 200px;
-        max-height: 50vw;
-        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        min-height: 240px;
+        border-radius: var(--radius-card) 0 0 var(--radius-card);
         overflow: hidden;
       }
       .carousel-content {
-        padding: 20px 0;
-        border-top: 1px solid var(--line);
-        border-left: none;
-        gap: 16px;
+        padding: 20px 16px;
+        border-left: 1px solid var(--line);
+        border-top: none;
+        gap: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
       .carousel-top { flex-direction: row; align-items: center; }
-      .carousel-title { font-size: 20px; }
-      .carousel-desc { font-size: 12px; line-height: 1.5; }
-      .carousel-controls { margin-top: 12px; }
-      .carousel-btn { width: 36px; height: 36px; }
-      .carousel-counter { font-size: 11px; }
+      .carousel-title { font-size: 18px; }
+      .carousel-desc { font-size: 11px; line-height: 1.5; }
+      .carousel-controls { margin-top: 10px; }
+      .carousel-btn { width: 32px; height: 32px; }
+      .carousel-counter { font-size: 10px; }
 
       .pricing-section { padding: 48px 16px; }
-      .pricing-grid { grid-template-columns: 1fr; gap: 12px; }
-      .pricing-card { padding: 18px 16px; border-radius: 14px; }
-      .pricing-card-category { font-size: 9px; letter-spacing: 0.15em; margin-bottom: 6px; }
-      .pricing-card-title { font-size: 16px; margin-bottom: 4px; }
-      .pricing-card-price { font-size: 28px; margin-bottom: 4px; }
-      .pricing-card-duration { font-size: 10px; margin-bottom: 8px; }
-      .pricing-card-desc { font-size: 12px; margin-bottom: 10px; }
-      .pricing-card-features { font-size: 11px; gap: 6px; }
-      .pricing-card-features li { gap: 6px; }
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
+      .pricing-card { padding: 12px 10px; border-right: 1px solid var(--line); gap: 6px; }
+      .pricing-card:last-child { border-right: none; }
+      .pricing-card-category { font-size: 7px; letter-spacing: 0.08em; margin-bottom: 2px; }
+      .pricing-card-title { font-size: 12px; margin-bottom: 1px; }
+      .pricing-card-price { font-size: 18px; margin-bottom: 0; }
+      .pricing-card-duration { font-size: 8px; margin-bottom: 3px; }
+      .pricing-card-desc { display: none; }
+      .pricing-card-features { font-size: 8px; gap: 2px; }
+      .pricing-card-features li { gap: 3px; }
+      .pricing-card-features li svg { width: 10px; height: 10px; }
 
       .cta-section { padding: 48px 16px; text-align: center; }
       .cta-title { font-size: 24px; }
