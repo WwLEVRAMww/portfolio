@@ -514,7 +514,7 @@
       border-left: 1px solid var(--line);
     }
     @media (max-width: 860px) {
-      .carousel-section { height: 340px; }
+      .carousel-section { height: auto; min-height: 300px; padding: 0; }
       .carousel-content { padding: 28px 24px; }
       .carousel-title { font-size: 20px; }
       .carousel-desc { font-size: 12px; }
@@ -1274,12 +1274,15 @@
       .carousel-section {
         display: grid;
         grid-template-columns: 1.05fr 0.95fr;
-        height: 300px;
-        padding: 48px 16px;
+        height: auto;
+        min-height: 300px;
+        padding: 0;
         gap: 0;
+        border-radius: var(--radius-card);
+        overflow: hidden;
       }
       .carousel-visual {
-        height: 100%;
+        min-height: 300px;
         border-radius: 0;
         overflow: hidden;
       }
