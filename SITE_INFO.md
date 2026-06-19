@@ -7,7 +7,7 @@
 - **GitHub Pages**: `https://wwlevramww.github.io/portfolio/`
 - **Владелец**: Андронов Роман
 - **Город**: Москва / Петербург
-- **Telegram**: `https://t.me/andronov_roman_photo`
+- **Telegram**: `https://t.me/wwLEVRAMww`
 
 ---
 
@@ -105,7 +105,7 @@
 ```javascript
 const CONFIG = {
   ownerName: "Андронов Роман",
-  telegramLink: "https://t.me/andronov_roman_photo",
+  telegramLink: "https://t.me/wwLEVRAMww",
   driveFolderId: "1_zVX9cm_s9vXdny7Ipsc2rsigGwcXZIG",
   driveApiKey: "AIzaSyBz98xF6vEsgjpf53yTM8zuttlMJRxwbes",
   pricing: [
@@ -144,5 +144,5 @@ const CONFIG = {
 
 ## Контакты
 
-- **Telegram**: `https://t.me/andronov_roman_photo`
+- **Telegram**: `https://t.me/wwLEVRAMww`
 - **Все ссылки на Telegram ведут на этот адрес**
