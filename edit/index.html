@@ -236,10 +236,21 @@ function onGoogleLogin(response) {
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("app").style.display = "block";
   document.getElementById("user-email").textContent = userEmail;
-  requestDriveToken();
+  showDriveAuth();
+}
+
+function showDriveAuth() {
+  document.getElementById("sidebar").innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  document.getElementById("main").innerHTML = `
+    <div class="main-empty" style="flex-direction:column;gap:16px">
+      <p>Нужно разрешить доступ к Google Диску для загрузки и управления фотографиями</p>
+      <button class="btn accent" id="btn-drive-auth" onclick="requestDriveToken()">Разрешить доступ к Диску</button>
+    </div>`;
 }
 
 function requestDriveToken() {
+  const btn = document.getElementById("btn-drive-auth");
+  if (btn) { btn.disabled = true; btn.textContent = "Откройте popup..."; }
   google.accounts.oauth2.initTokenClient({
     client_id: googleClientId,
     scope: "https://www.googleapis.com/auth/drive",
@@ -248,8 +259,8 @@ function requestDriveToken() {
       loadEditorData();
     },
     error_callback: (err) => {
-      showStatus("Ошибка доступа к Диску: " + (err.message || err.type), true);
-      loadEditorData();
+      showStatus("Ошибка: " + (err.message || err.type), true);
+      if (btn) { btn.disabled = false; btn.textContent = "Попробовать снова"; }
     }
   }).requestAccessToken();
 }
