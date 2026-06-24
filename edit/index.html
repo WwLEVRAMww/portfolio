@@ -11,11 +11,19 @@
     body { font-family: 'Gros Ventre', sans-serif; background: #0e0f11; color: #e8e8e8; min-height: 100vh; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 
-    .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 24px; }
-    .auth-screen h1 { font-size: 22px; font-weight: 400; letter-spacing: 0.04em; }
-    .auth-screen p { font-size: 13px; color: rgba(255,255,255,0.4); max-width: 400px; text-align: center; line-height: 1.6; }
+    .auth-screen, .setup-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 24px; padding: 40px; }
+    .auth-screen h1, .setup-screen h1 { font-size: 22px; font-weight: 400; letter-spacing: 0.04em; }
+    .auth-screen p, .setup-screen p { font-size: 13px; color: rgba(255,255,255,0.4); max-width: 400px; text-align: center; line-height: 1.6; }
     .auth-screen .error { color: #ef4444; font-size: 13px; }
     #g_id_signin { border-radius: 12px; overflow: hidden; }
+
+    .setup-screen .setup-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; width: 100%; max-width: 440px; }
+    .setup-screen label { display: block; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; letter-spacing: 0.04em; }
+    .setup-screen input[type="text"] { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #e8e8e8; font-family: 'Gros Ventre', sans-serif; font-size: 14px; outline: none; margin-bottom: 16px; }
+    .setup-screen input[type="text"]:focus { border-color: #22C55E; }
+    .setup-screen input[type="text"]::placeholder { color: rgba(255,255,255,0.2); }
+    .setup-screen .hint { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: -10px; margin-bottom: 16px; line-height: 1.5; }
+    .setup-screen .hint a { color: #22C55E; }
 
     .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(14,15,17,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 20; }
     .topbar h1 { font-size: 16px; font-weight: 400; letter-spacing: 0.04em; }
@@ -108,6 +116,17 @@
 </head>
 <body>
 
+<div id="setup-screen" class="setup-screen" style="display:none">
+  <h1>Настройка редактора</h1>
+  <p>Вставь GitHub Personal Access Token для сохранения изменений</p>
+  <div class="setup-box">
+    <label>GitHub Token</label>
+    <input type="text" id="setup-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    <div class="hint">Scope: <strong>repo</strong>. Создать: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></div>
+    <button class="btn accent" onclick="saveToken()" style="width:100%">Сохранить и войти</button>
+  </div>
+</div>
+
 <div id="auth-screen" class="auth-screen" style="display:none">
   <h1>Редактор серий</h1>
   <p>Войдите через Google для доступа к редактору</p>
@@ -173,11 +192,19 @@ function showStatus(msg, isError) {
 // --- Setup ---
 function loadSetup() {
   googleClientId = atob("NTk3NzEyMzM3MzUtczB2NWY2M2prdTFlY3JtNzNkdGpoZ3ZyYjRzYWZvbXQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20=");
-  githubToken = atob("Z2hwX0VXSktHRUp1WUVVUVN1SDVrd3d5c2VrM0d2ZldtWjBpeWpNUg==");
-  return true;
+  githubToken = localStorage.getItem("editor-gh-token") || "";
+  return !!githubToken;
 }
+
+function saveToken() {
+  const v = document.getElementById("setup-token").value.trim();
+  if (!v || !v.startsWith("ghp_")) { showStatus("Токен должен начинаться с ghp_", true); return; }
+  localStorage.setItem("editor-gh-token", v);
+  location.reload();
+}
+
 function logout() {
-  localStorage.removeItem("editor-creds");
+  localStorage.removeItem("editor-gh-token");
   google.accounts.id.disableAutoSelect();
   location.reload();
 }
@@ -546,7 +573,7 @@ function confirmDeletePack(idx) {
   overlay.innerHTML = `
     <div class="modal">
       <h3>Удалить серию?</h3>
-      <div class="confirm-text">«${p.name}» будет удалена с Google Диска без возможности восстановления.(${p.files.length} фото)</div>
+      <div class="confirm-text">«${p.name}» будет удалена с Google Диска без возможности восстановления. (${p.files.length} фото)</div>
       <div class="modal-actions">
         <button class="btn" onclick="this.closest('.modal-overlay').remove()">Отмена</button>
         <button class="btn danger" id="confirm-del-btn">Удалить</button>
@@ -721,6 +748,10 @@ async function saveToGitHub() {
 // --- Init ---
 (function init() {
   loadSetup();
+  if (!githubToken) {
+    document.getElementById("setup-screen").style.display = "flex";
+    return;
+  }
   document.getElementById("auth-screen").style.display = "flex";
   initGoogleAuth();
 })();
