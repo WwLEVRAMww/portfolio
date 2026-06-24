@@ -17,20 +17,6 @@
     .auth-screen .error { color: #ef4444; font-size: 13px; }
     #g_id_signin { border-radius: 12px; overflow: hidden; }
 
-    .setup-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; padding: 40px; }
-    .setup-screen h1 { font-size: 22px; font-weight: 400; }
-    .setup-screen .steps { max-width: 560px; text-align: left; }
-    .setup-screen .step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 22px; margin-bottom: 12px; }
-    .setup-screen .step h3 { font-size: 14px; color: #22C55E; margin-bottom: 8px; font-weight: 500; }
-    .setup-screen .step p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
-    .setup-screen .step code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #e8e8e8; font-family: monospace; }
-    .setup-screen .step ol { padding-left: 18px; margin-top: 6px; }
-    .setup-screen .step li { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; }
-    .setup-screen textarea { width: 100%; max-width: 560px; height: 120px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; color: #e8e8e8; font-family: monospace; font-size: 12px; resize: vertical; }
-    .setup-screen textarea::placeholder { color: rgba(255,255,255,0.25); }
-    .setup-screen .btn { padding: 10px 24px; border-radius: 20px; border: 1px solid #22C55E; background: #22C55E; color: #000; font-family: 'Gros Ventre', sans-serif; font-size: 14px; cursor: pointer; font-weight: 600; }
-    .setup-screen .btn:hover { background: #16a34a; }
-
     .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(14,15,17,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 20; }
     .topbar h1 { font-size: 16px; font-weight: 400; letter-spacing: 0.04em; }
     .topbar-actions { display: flex; gap: 10px; align-items: center; }
@@ -39,23 +25,39 @@
     .btn:hover { background: rgba(255,255,255,0.1); }
     .btn.accent { background: #22C55E; color: #000; border-color: #22C55E; font-weight: 600; }
     .btn.accent:hover { background: #16a34a; }
+    .btn.danger { border-color: #ef4444; color: #ef4444; }
+    .btn.danger:hover { background: #ef4444; color: #fff; }
+    .btn.sm { padding: 5px 12px; font-size: 11px; }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .layout { display: flex; height: calc(100vh - 53px); }
-    .sidebar { width: 260px; min-width: 260px; border-right: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 12px 0; }
-    .sidebar-item { padding: 12px 20px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 12px; }
+    .sidebar { width: 260px; min-width: 260px; border-right: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; }
+    .sidebar-list { flex: 1; overflow-y: auto; }
+    .sidebar-item { padding: 10px 16px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 10px; position: relative; }
     .sidebar-item:hover { background: rgba(255,255,255,0.04); }
     .sidebar-item.active { background: rgba(34,197,94,0.1); border-left: 3px solid #22C55E; }
-    .sidebar-item img { width: 40px; height: 50px; object-fit: cover; border-radius: 6px; }
+    .sidebar-item.drag-over-item { border-top: 2px solid #22C55E; }
+    .sidebar-item img { width: 36px; height: 46px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
     .sidebar-item-info { flex: 1; min-width: 0; }
-    .sidebar-item-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sidebar-item-count { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .sidebar-item-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-item-count { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+    .sidebar-item-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+    .sidebar-item:hover .sidebar-item-actions { opacity: 1; }
+    .sidebar-item-actions button { width: 24px; height: 24px; border-radius: 6px; border: none; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .sidebar-item-actions button:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .sidebar-item-actions button.del:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .sidebar-add { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-add .btn { width: 100%; justify-content: center; display: flex; align-items: center; gap: 6px; }
+
+    .name-edit { background: none; border: 1px solid rgba(34,197,94,0.4); border-radius: 6px; color: #e8e8e8; font-family: 'Gros Ventre', sans-serif; font-size: 13px; padding: 2px 6px; width: 100%; outline: none; }
+    .name-edit:focus { border-color: #22C55E; }
 
     .main { flex: 1; overflow-y: auto; padding: 24px; }
     .main-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: rgba(255,255,255,0.3); font-size: 16px; }
-    .pack-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .pack-header h2 { font-size: 22px; font-weight: 400; }
-    .pack-header .count { font-size: 13px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+    .pack-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+    .pack-header h2 { font-size: 22px; font-weight: 400; display: flex; align-items: center; gap: 10px; }
+    .pack-header .count { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .pack-header-actions { display: flex; gap: 8px; }
 
     .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
     .photo-card { position: relative; border-radius: 10px; overflow: hidden; background: #1a1b1e; cursor: grab; transition: transform 0.2s, box-shadow 0.2s; }
@@ -71,7 +73,25 @@
     .photo-card .cover-badge { position: absolute; bottom: 8px; left: 8px; background: #22C55E; color: #000; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
     .photo-card .idx { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: rgba(255,255,255,0.7); font-size: 11px; padding: 2px 7px; border-radius: 8px; }
 
-    .status { position: fixed; bottom: 20px; right: 20px; background: #22C55E; color: #000; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 100; pointer-events: none; }
+    .upload-zone { border: 2px dashed rgba(255,255,255,0.12); border-radius: 12px; padding: 40px; text-align: center; color: rgba(255,255,255,0.3); font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 16px; }
+    .upload-zone:hover { border-color: rgba(34,197,94,0.4); color: rgba(255,255,255,0.5); }
+    .upload-zone.drag-active { border-color: #22C55E; background: rgba(34,197,94,0.05); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal { background: #1a1b1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; width: 90%; max-width: 440px; }
+    .modal h3 { font-size: 18px; font-weight: 400; margin-bottom: 20px; }
+    .modal label { display: block; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; letter-spacing: 0.04em; }
+    .modal input[type="text"], .modal input[type="file"] { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #e8e8e8; font-family: 'Gros Ventre', sans-serif; font-size: 14px; outline: none; margin-bottom: 16px; }
+    .modal input[type="text"]:focus { border-color: #22C55E; }
+    .modal input[type="file"] { cursor: pointer; padding: 8px; }
+    .modal input[type="file"]::file-selector-button { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e8e8e8; font-family: 'Gros Ventre', sans-serif; font-size: 12px; padding: 6px 14px; cursor: pointer; margin-right: 10px; }
+    .modal input[type="file"]::file-selector-button:hover { background: rgba(255,255,255,0.1); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+    .modal .progress { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; min-height: 18px; }
+
+    .confirm-text { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 20px; }
+
+    .status { position: fixed; bottom: 20px; right: 20px; background: #22C55E; color: #000; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 200; pointer-events: none; }
     .status.show { opacity: 1; transform: translateY(0); }
     .status.error { background: #ef4444; color: #fff; }
 
@@ -95,38 +115,6 @@
   <div class="error" id="auth-error"></div>
 </div>
 
-<div id="setup-screen" class="setup-screen" style="display:none">
-  <h1>Настройка редактора</h1>
-  <div class="steps">
-    <div class="step">
-      <h3>1. Google OAuth</h3>
-      <ol>
-        <li>Открой <code>console.cloud.google.com</code></li>
-        <li>Создай проект (или используй существующий)</li>
-        <li>APIs & Services → Credentials → Create Credentials → OAuth client ID</li>
-        <li>Application type: <code>Web application</code></li>
-        <li>Authorized JavaScript origins: <code>https://wwlevramww.github.io</code></li>
-        <li>Скопируй Client ID</li>
-      </ol>
-    </div>
-    <div class="step">
-      <h3>2. GitHub Token</h3>
-      <ol>
-        <li>Открой <code>github.com/settings/tokens</code></li>
-        <li>Generate new token (classic)</li>
-        <li>Scope: <code>repo</code> (только это)</li>
-        <li>Скопируй токен</li>
-      </ol>
-    </div>
-    <div class="step">
-      <h3>3. Вставь ниже</h3>
-      <p>Формат: <code>CLIENT_ID|GITHUB_TOKEN</code></p>
-    </div>
-  </div>
-  <textarea id="setup-input" placeholder="123456789-abc.apps.googleusercontent.com|ghp_xxxxxxxxxxxx"></textarea>
-  <button class="btn" onclick="saveSetup()">Сохранить</button>
-</div>
-
 <div id="app" style="display:none">
   <div class="topbar">
     <h1>Редактор серий</h1>
@@ -138,8 +126,13 @@
     </div>
   </div>
   <div class="layout">
-    <div class="sidebar" id="sidebar">
-      <div class="loading"><div class="spinner"></div></div>
+    <div class="sidebar">
+      <div class="sidebar-list" id="sidebar">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div class="sidebar-add">
+        <button class="btn" onclick="showCreatePack()">+ Новая серия</button>
+      </div>
     </div>
     <div class="main" id="main">
       <div class="main-empty">Выберите серию слева</div>
@@ -165,6 +158,7 @@ let selectedPack = -1;
 let config = { packs: {} };
 let configSha = null;
 let userEmail = "";
+let driveToken = null;
 
 function img(id) { return `https://lh3.googleusercontent.com/d/${id}`; }
 
@@ -182,14 +176,9 @@ function loadSetup() {
   githubToken = atob("Z2hwX3pZUG80NVZFZTV4Z0o0TXBZZ3V5Q2RZNUJRemRqUjNRb2kzdw==");
   return true;
 }
-function saveSetup() {
-  const v = document.getElementById("setup-input").value.trim();
-  if (!v || !v.includes("|")) { showStatus("Формат: CLIENT_ID|TOKEN", true); return; }
-  localStorage.setItem("editor-creds", v);
-  location.reload();
-}
 function logout() {
   localStorage.removeItem("editor-creds");
+  google.accounts.id.disableAutoSelect();
   location.reload();
 }
 
@@ -220,7 +209,22 @@ function onGoogleLogin(response) {
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("app").style.display = "block";
   document.getElementById("user-email").textContent = userEmail;
-  loadEditorData();
+  requestDriveToken();
+}
+
+function requestDriveToken() {
+  google.accounts.oauth2.initTokenClient({
+    client_id: googleClientId,
+    scope: "https://www.googleapis.com/auth/drive",
+    callback: (tokenResponse) => {
+      driveToken = tokenResponse.access_token;
+      loadEditorData();
+    },
+    error_callback: (err) => {
+      showStatus("Ошибка доступа к Диску: " + (err.message || err.type), true);
+      loadEditorData();
+    }
+  }).requestAccessToken();
 }
 
 // --- GitHub API ---
@@ -258,6 +262,49 @@ async function driveList(q) {
   if (!r.ok) throw new Error(`Drive API ${r.status}`);
   const d = await r.json();
   return d.files || [];
+}
+
+async function driveCreateFolder(name) {
+  const metadata = { name, mimeType: "application/vnd.google-apps.folder", parents: [DRIVE_FOLDER_ID] };
+  const r = await fetch("https://www.googleapis.com/drive/v3/files", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${driveToken}`, "Content-Type": "application/json" },
+    body: JSON.stringify(metadata)
+  });
+  if (!r.ok) throw new Error(`Drive create folder ${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function driveRenameFolder(fileId, name) {
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: "PATCH",
+    headers: { "Authorization": `Bearer ${driveToken}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ name })
+  });
+  if (!r.ok) throw new Error(`Drive rename ${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function driveDeleteFile(fileId) {
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${driveToken}` }
+  });
+  if (!r.ok) throw new Error(`Drive delete ${r.status}: ${await r.text()}`);
+}
+
+async function driveUploadFile(folderId, file) {
+  const metadata = { name: file.name, parents: [folderId] };
+  const form = new FormData();
+  form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+  form.append("file", file);
+  const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${driveToken}` },
+    body: form
+  });
+  if (!r.ok) throw new Error(`Drive upload ${r.status}: ${await r.text()}`);
+  return r.json();
 }
 
 // --- Editor ---
@@ -301,8 +348,24 @@ function renderSidebar() {
     const coverId = pc?.coverId || p.files[0]?.id;
     const d = document.createElement("div");
     d.className = "sidebar-item" + (i === selectedPack ? " active" : "");
-    d.onclick = () => selectPack(i);
-    d.innerHTML = `<img src="${img(coverId)}" alt=""><div class="sidebar-item-info"><div class="sidebar-item-name">${p.name}</div><div class="sidebar-item-count">${p.files.length} фото</div></div>`;
+    d.dataset.idx = i;
+    d.onclick = (e) => { if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON") selectPack(i); };
+    d.draggable = true;
+    d.innerHTML = `
+      <img src="${coverId ? img(coverId) : ''}" alt="">
+      <div class="sidebar-item-info">
+        <div class="sidebar-item-name" id="pack-name-${i}">${p.name}</div>
+        <div class="sidebar-item-count">${p.files.length} фото</div>
+      </div>
+      <div class="sidebar-item-actions">
+        <button onclick="startRenamePack(${i})" title="Переименовать">✎</button>
+        <button class="del" onclick="confirmDeletePack(${i})" title="Удалить">✕</button>
+      </div>`;
+    d.addEventListener("dragstart", onPackDragStart);
+    d.addEventListener("dragover", onPackDragOver);
+    d.addEventListener("dragleave", onPackDragLeave);
+    d.addEventListener("drop", onPackDrop);
+    d.addEventListener("dragend", onPackDragEnd);
     sb.appendChild(d);
   });
 }
@@ -329,9 +392,17 @@ function renderPack() {
   const main = document.getElementById("main");
   main.innerHTML = `
     <div class="pack-header">
-      <h2>${p.name} <span class="count">${ids.length} фото</span></h2>
+      <h2><span id="pack-title">${p.name}</span> <span class="count">${ids.length} фото</span></h2>
+      <div class="pack-header-actions">
+        <button class="btn sm" onclick="startRenamePack(${selectedPack})">Переименовать</button>
+        <button class="btn sm danger" onclick="confirmDeletePack(${selectedPack})">Удалить серию</button>
+      </div>
     </div>
-    <div class="photo-grid" id="photo-grid"></div>`;
+    <div class="photo-grid" id="photo-grid"></div>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      Перетащите фото сюда или нажмите для выбора
+      <input type="file" id="file-input" multiple accept="image/*" style="display:none" onchange="uploadPhotos(this.files)">
+    </div>`;
 
   const grid = document.getElementById("photo-grid");
   ids.forEach((id, i) => {
@@ -351,6 +422,7 @@ function renderPack() {
         <button class="cover-btn ${isCover ? 'active' : ''}" onclick="setCover('${id}')" title="Заглавное">★</button>
         <button onclick="movePhoto(${i}, -1)" title="Вверх">↑</button>
         <button onclick="movePhoto(${i}, 1)" title="Вниз">↓</button>
+        <button onclick="confirmDeletePhoto('${id}', ${i})" title="Удалить" style="color:#ef4444">✕</button>
       </div>`;
     card.addEventListener("dragstart", onDragStart);
     card.addEventListener("dragover", onDragOver);
@@ -359,8 +431,14 @@ function renderPack() {
     card.addEventListener("dragend", onDragEnd);
     grid.appendChild(card);
   });
+
+  const uz = document.getElementById("upload-zone");
+  uz.addEventListener("dragover", (e) => { e.preventDefault(); uz.classList.add("drag-active"); });
+  uz.addEventListener("dragleave", () => uz.classList.remove("drag-active"));
+  uz.addEventListener("drop", (e) => { e.preventDefault(); uz.classList.remove("drag-active"); uploadPhotos(e.dataTransfer.files); });
 }
 
+// --- Photo reorder ---
 let dragIdx = null;
 function onDragStart(e) { dragIdx = +e.currentTarget.dataset.idx; e.currentTarget.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; }
 function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
@@ -399,6 +477,233 @@ function setCover(id) {
   showStatus("Заглавное фото изменено");
 }
 
+// --- Pack reorder ---
+let packDragIdx = null;
+function onPackDragStart(e) {
+  packDragIdx = +e.currentTarget.dataset.idx;
+  e.currentTarget.style.opacity = "0.4";
+  e.dataTransfer.effectAllowed = "move";
+}
+function onPackDragOver(e) {
+  e.preventDefault();
+  document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("drag-over-item"));
+  e.currentTarget.classList.add("drag-over-item");
+}
+function onPackDragLeave(e) { e.currentTarget.classList.remove("drag-over-item"); }
+function onPackDragEnd(e) {
+  e.currentTarget.style.opacity = "";
+  document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("drag-over-item"));
+}
+function onPackDrop(e) {
+  e.preventDefault();
+  const toIdx = +e.currentTarget.dataset.idx;
+  e.currentTarget.classList.remove("drag-over-item");
+  if (packDragIdx === null || packDragIdx === toIdx) return;
+  const [moved] = packs.splice(packDragIdx, 1);
+  packs.splice(toIdx, 0, moved);
+  if (selectedPack === packDragIdx) selectedPack = toIdx;
+  else if (packDragIdx < selectedPack && toIdx >= selectedPack) selectedPack--;
+  else if (packDragIdx > selectedPack && toIdx <= selectedPack) selectedPack++;
+  renderSidebar();
+  showStatus("Порядок серий изменён");
+  packDragIdx = null;
+}
+
+// --- Rename pack ---
+function startRenamePack(idx) {
+  const nameEl = document.getElementById(`pack-name-${idx}`);
+  if (!nameEl) return;
+  const oldName = packs[idx].name;
+  nameEl.innerHTML = `<input class="name-edit" type="text" value="${oldName}" data-idx="${idx}">`;
+  const input = nameEl.querySelector("input");
+  input.focus();
+  input.select();
+  input.onblur = () => renamePack(idx, input.value.trim() || oldName);
+  input.onkeydown = (e) => { if (e.key === "Enter") input.blur(); if (e.key === "Escape") { input.value = oldName; input.blur(); } };
+}
+
+async function renamePack(idx, newName) {
+  const p = packs[idx];
+  if (newName === p.name) { renderSidebar(); return; }
+  if (!driveToken) { showStatus("Нет доступа к Диску", true); renderSidebar(); return; }
+  try {
+    await driveRenameFolder(p.folderId, newName);
+    packs[idx].name = newName;
+    showStatus("Серия переименована");
+    renderSidebar();
+    if (selectedPack === idx) renderPack();
+  } catch(e) {
+    showStatus("Ошибка: " + e.message, true);
+    renderSidebar();
+  }
+}
+
+// --- Delete pack ---
+function confirmDeletePack(idx) {
+  const p = packs[idx];
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>Удалить серию?</h3>
+      <div class="confirm-text">«${p.name}» будет удалена с Google Диска без возможности восстановления.(${p.files.length} фото)</div>
+      <div class="modal-actions">
+        <button class="btn" onclick="this.closest('.modal-overlay').remove()">Отмена</button>
+        <button class="btn danger" id="confirm-del-btn">Удалить</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  document.getElementById("confirm-del-btn").onclick = () => { overlay.remove(); deletePack(idx); };
+}
+
+async function deletePack(idx) {
+  const p = packs[idx];
+  if (!driveToken) { showStatus("Нет доступа к Диску", true); return; }
+  try {
+    await driveDeleteFile(p.folderId);
+    delete config.packs[p.folderId];
+    packs.splice(idx, 1);
+    if (selectedPack === idx) { selectedPack = -1; document.getElementById("main").innerHTML = '<div class="main-empty">Выберите серию слева</div>'; }
+    else if (selectedPack > idx) selectedPack--;
+    renderSidebar();
+    showStatus("Серия удалена");
+  } catch(e) {
+    showStatus("Ошибка: " + e.message, true);
+  }
+}
+
+// --- Create pack ---
+function showCreatePack() {
+  if (!driveToken) { showStatus("Нет доступа к Диску", true); return; }
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>Новая серия</h3>
+      <label>Название</label>
+      <input type="text" id="new-pack-name" placeholder="Название серии">
+      <label>Фотографии</label>
+      <input type="file" id="new-pack-files" multiple accept="image/*">
+      <div class="progress" id="upload-progress"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="this.closest('.modal-overlay').remove()">Отмена</button>
+        <button class="btn accent" id="create-pack-btn">Создать</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  document.getElementById("create-pack-btn").onclick = () => createPack(overlay);
+}
+
+async function createPack(overlay) {
+  const name = document.getElementById("new-pack-name").value.trim();
+  const files = document.getElementById("new-pack-files").files;
+  const progress = document.getElementById("upload-progress");
+  const btn = document.getElementById("create-pack-btn");
+
+  if (!name) { showStatus("Введите название", true); return; }
+  if (!files.length) { showStatus("Выберите фотографии", true); return; }
+
+  btn.disabled = true;
+  btn.textContent = "Создание...";
+
+  try {
+    progress.textContent = "Создание папки...";
+    const folder = await driveCreateFolder(name);
+
+    const fileIds = [];
+    for (let i = 0; i < files.length; i++) {
+      progress.textContent = `Загрузка ${i + 1} из ${files.length}...`;
+      const uploaded = await driveUploadFile(folder.id, files[i]);
+      fileIds.push(uploaded.id);
+    }
+
+    packs.push({ name, folderId: folder.id, files: fileIds.map(id => ({ id, name: "" })) });
+    config.packs[folder.id] = { coverId: fileIds[0] || null, photoOrder: fileIds };
+
+    overlay.remove();
+    selectedPack = packs.length - 1;
+    renderSidebar();
+    renderPack();
+    showStatus(`Серия «${name}» создана (${files.length} фото)`);
+  } catch(e) {
+    showStatus("Ошибка: " + e.message, true);
+    btn.disabled = false;
+    btn.textContent = "Создать";
+  }
+}
+
+// --- Upload photos to existing pack ---
+async function uploadPhotos(fileList) {
+  if (!fileList.length) return;
+  const p = packs[selectedPack];
+  if (!p) return;
+  if (!driveToken) { showStatus("Нет доступа к Диску", true); return; }
+
+  const zone = document.getElementById("upload-zone");
+  const origText = zone.textContent;
+  const fileIds = [];
+
+  for (let i = 0; i < fileList.length; i++) {
+    zone.textContent = `Загрузка ${i + 1} из ${fileList.length}...`;
+    try {
+      const uploaded = await driveUploadFile(p.folderId, fileList[i]);
+      fileIds.push(uploaded.id);
+      p.files.push({ id: uploaded.id, name: fileList[i].name });
+    } catch(e) {
+      showStatus("Ошибка загрузки: " + e.message, true);
+    }
+  }
+
+  if (fileIds.length) {
+    const pc = config.packs[p.folderId];
+    if (!pc.photoOrder) pc.photoOrder = p.files.map(f => f.id);
+    else pc.photoOrder = [...pc.photoOrder, ...fileIds];
+    showStatus(`Загружено ${fileIds.length} фото`);
+  }
+
+  zone.textContent = "Перетащите фото сюда или нажмите для выбора";
+  renderPack();
+  renderSidebar();
+}
+
+// --- Delete photo from pack ---
+function confirmDeletePhoto(id, idx) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>Удалить фото?</h3>
+      <div class="confirm-text">Фото будет удалено с Google Диска без возможности восстановления.</div>
+      <div class="modal-actions">
+        <button class="btn" onclick="this.closest('.modal-overlay').remove()">Отмена</button>
+        <button class="btn danger" id="confirm-del-photo">Удалить</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  document.getElementById("confirm-del-photo").onclick = () => { overlay.remove(); deletePhoto(id, idx); };
+}
+
+async function deletePhoto(id, idx) {
+  if (!driveToken) { showStatus("Нет доступа к Диску", true); return; }
+  const p = packs[selectedPack];
+  try {
+    await driveDeleteFile(id);
+    p.files = p.files.filter(f => f.id !== id);
+    const pc = config.packs[p.folderId];
+    if (pc.photoOrder) pc.photoOrder = pc.photoOrder.filter(pid => pid !== id);
+    if (pc.coverId === id) pc.coverId = p.files[0]?.id || null;
+    renderPack();
+    renderSidebar();
+    showStatus("Фото удалено");
+  } catch(e) {
+    showStatus("Ошибка: " + e.message, true);
+  }
+}
+
+// --- Save ---
 async function saveToGitHub() {
   const btn = document.getElementById("btn-save");
   btn.disabled = true;
